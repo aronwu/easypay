@@ -22,10 +22,9 @@ public class MyApplicationContext {
     static
     {
 		/* 加载 log4j2 配置文件 */
-        String log4j2File =  "conf/log4j2.xml";
-        File file = new File(log4j2File);
-        System.out.println(file.getAbsolutePath());
-        System.setProperty("log4j.configurationFile", log4j2File);
+        File file = new File("conf/log4j2.xml");
+        System.out.println("log4j2 file location:" + file.getAbsolutePath());
+        System.setProperty("log4j.configurationFile", file.getAbsolutePath());
     }
 
     public static MyApplicationContext getInstance(){
