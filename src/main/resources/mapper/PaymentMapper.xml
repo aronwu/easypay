@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuswoo.easypay.service.mapper.PaymentMapper">
+  <resultMap id="BaseResultMap" type="com.wuswoo.easypay.service.model.Payment">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="payment_code" jdbcType="VARCHAR" property="paymentCode" />
+    <result column="platform_id" jdbcType="INTEGER" property="platformId" />
+    <result column="app_id" jdbcType="INTEGER" property="appId" />
+    <result column="service_fee_rate" jdbcType="INTEGER" property="serviceFeeRate" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="bank" jdbcType="VARCHAR" property="bank" />
+    <result column="item_name" jdbcType="VARCHAR" property="itemName" />
+    <result column="item_count" jdbcType="INTEGER" property="itemCount" />
+    <result column="item_desc" jdbcType="VARCHAR" property="itemDesc" />
+    <result column="notify_url" jdbcType="VARCHAR" property="notifyUrl" />
+    <result column="return_url" jdbcType="VARCHAR" property="returnUrl" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="client_ip" jdbcType="VARCHAR" property="clientIp" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="attach" jdbcType="VARCHAR" property="attach" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+  </resultMap>
+</mapper>

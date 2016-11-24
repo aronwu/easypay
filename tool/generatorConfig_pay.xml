@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!-- classPathEntry:数据库的JDBC驱动,换成你自己的驱动位置 -->
+	<context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="conditional">
+
+		<property name="beginningDelimiter" value="`"/>
+		<property name="endingDelimiter" value="`"/>
+		<property name="javaFileEncoding" value="UTF-8"/>
+
+		<plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+			<property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+		</plugin>
+
+
+		<!-- 
+		<plugin type="plugin.SelectByPagePlugin" /> 
+		<plugin type="com.mybatis.generator.plugins.RenameExampleClassPlugin">
+			<property name="searchString" value="Example$" />
+			<property name="replaceString" value="Criteria" />
+		</plugin>
+		-->
+		<!--
+		<plugin type="com.mybatis.generator.plugins.EqualsHashCodePlugin" />
+
+		<plugin type="com.mybatis.generator.plugins.MapperConfigPlugin">
+			<property name="fileName" value="GeneratedMapperConfig.xml" />
+			<property name="targetPackage" value="com.cy.mybatis.mbg.util" />
+			<property name="targetProject" value="../workspace/schain/src}" />
+		</plugin>
+		-->
+		
+		<plugin type="org.mybatis.generator.plugins.PaginationPlugin" />  
+		
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		 <!-- 去除自动生成的日期注释 -->
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost/easypay?useUnicode=true&amp;characterEncoding=UTF-8" userId="root" password=""></jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+ 		<!-- targetProject:自动生成代码的位置 -->
+		<javaModelGenerator targetPackage="com.wuswoo.easypay.service.model" targetProject="../src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="mapper" targetProject="../src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.wuswoo.easypay.service.mapper" targetProject="../src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		<!-- 
+			tableName为对应的数据库表, 
+			domainObjectName是要生成的实体类, 
+			如果想要mapper配置文件加入sql的where条件查询, 可以将enableCountByExample等设为true, 这样就会生成一个对应domainObjectName的Example类, 
+			enableCountByExample等设为false时, 就不会生成对应的Example类了.
+		-->
+
+
+		<table tableName="platform" domainObjectName="Platform">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>		  
+		<table tableName="platform_code" domainObjectName="PlatformCode">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>		
+		
+		<table tableName="payment" domainObjectName="Payment">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>		
+		<table tableName="payment_result" domainObjectName="PaymentResult">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>
+
+		<table tableName="notify_failed_log" domainObjectName="NotifyFailedLog">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>		
+		
+
+		<table tableName="refund" domainObjectName="Refund">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>
+		<table tableName="refund_result" domainObjectName="RefundResult">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>
+
+		<table tableName="result_query" domainObjectName="ResultQuery">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>
+
+		<table tableName="notify_schedule" domainObjectName="NotifySchedule">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true" />
+		</table>
+		
+
+	</context>
+</generatorConfiguration>

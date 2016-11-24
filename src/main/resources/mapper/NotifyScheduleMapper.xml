@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuswoo.easypay.service.mapper.NotifyScheduleMapper">
+  <resultMap id="BaseResultMap" type="com.wuswoo.easypay.service.model.NotifySchedule">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="trade_id" jdbcType="BIGINT" property="tradeId" />
+    <result column="trade_type" jdbcType="TINYINT" property="tradeType" />
+    <result column="platform_id" jdbcType="INTEGER" property="platformId" />
+    <result column="next_notify_time" jdbcType="TIMESTAMP" property="nextNotifyTime" />
+    <result column="notify_count" jdbcType="TINYINT" property="notifyCount" />
+    <result column="notify_status" jdbcType="TINYINT" property="notifyStatus" />
+    <result column="notify_content" jdbcType="VARCHAR" property="notifyContent" />
+    <result column="payment_code" jdbcType="VARCHAR" property="paymentCode" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="refund_type" jdbcType="TINYINT" property="refundType" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="notify_error" jdbcType="LONGVARCHAR" property="notifyError" />
+  </resultMap>
+</mapper>

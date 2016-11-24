@@ -1,0 +1,13 @@
+/build
+.settings/
+.project
+.classpath
+.gradle/
+.DS_Store
+.idea/
+/log
+/conf/config.properties
+/conf/certs/alipay/*
+/conf/certs/weixin_app_cert/*
+/conf/certs/weixin_wap_cert/*
+/conf/certs/rsa_private_key.pem

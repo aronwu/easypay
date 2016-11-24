@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuswoo.easypay.service.mapper.PlatformMapper">
+  <resultMap id="BaseResultMap" type="com.wuswoo.easypay.service.model.Platform">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="service" jdbcType="VARCHAR" property="service" />
+    <result column="comments" jdbcType="VARCHAR" property="comments" />
+    <result column="ansync_wait_sec" jdbcType="INTEGER" property="ansyncWaitSec" />
+    <result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime" />
+    <result column="is_active" jdbcType="INTEGER" property="isActive" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+  </resultMap>
+</mapper>

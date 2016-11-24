@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--此log4j配置,会产生2个log文件
+service.log:输出所有信息 info级别包涵error
+service-error.log:只记录error级别日志
+-->
+<Configuration>
+    <!-- 定义些属性引用-->
+    <Properties>
+        <!-- 输出格式 -->
+        <property name="log_pattern">%d{yyyyMMdd HH:mm:ss}|%p|%t|%C.%M(%L)=&gt;&gt;%m%n</property>
+        <!-- 输出日志级别 -->
+        <property name="log_level">INFO</property>
+        <!-- 输出日志位置 -->
+        <property name="log_path">log/easypayment</property>
+    </Properties>
+
+    <!-- 配置多个appender -->
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="${log_level}" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout charset="UTF-8" pattern="${log_pattern}"/>
+        </Console>
+
+        <!-- 如果有多个ThresholdFilter，那么Filters是必须的，同时在Filters中，
+        首先要过滤不符合的日志级别，把不需要的首先DENY掉，然后再ACCEPT需要的日志级别，这个次序不能搞颠倒。
+ 		-->
+
+        <RollingRandomAccessFile name="SERVICE_LOG_FILE" fileName="${log_path}/service.log"
+                                 filePattern="${log_path}/%d{yyyy-MM}/service-%d{yyyy-MM-dd}-%i.log.gz">
+            <!-- <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY" /> -->
+            <PatternLayout charset="UTF-8" pattern="${log_pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy/>
+            <Filters>
+                <!-- 启用此行,service.log里将不会出现error级别的日志
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="SERVICE_ERR_LOG_FILE" fileName="${log_path}/service-error.log"
+                                 filePattern="${log_path}/%d{yyyy-MM}/service-error-%d{yyyy-MM-dd}-%i.log.gz">
+            <!-- <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY" /> -->
+            <PatternLayout charset="UTF-8" pattern="${log_pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy/>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <!--定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <Loggers>
+        <!--建立一个默认的root的logger，需要在root的level中指定输出的级别-->
+        <Root level="${log_level}">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="SERVICE_LOG_FILE"/>
+            <AppenderRef ref="SERVICE_ERR_LOG_FILE"/>
+        </Root>
+    </Loggers>
+</Configuration>
