@@ -7,7 +7,6 @@
 .idea/
 /log
 /conf/config.properties
-/conf/certs/alipay/*
-/conf/certs/weixin_app_cert/*
-/conf/certs/weixin_wap_cert/*
+/conf/certs/*/*
 /conf/certs/rsa_private_key.pem
+!.gitkeep
