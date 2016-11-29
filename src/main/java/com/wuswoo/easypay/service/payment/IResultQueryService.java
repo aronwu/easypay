@@ -3,6 +3,9 @@ package com.wuswoo.easypay.service.payment;
 import com.wuswoo.easypay.service.model.Payment;
 import com.wuswoo.easypay.service.model.PaymentResult;
 import com.wuswoo.easypay.service.model.RefundResult;
+import com.wuswoo.easypay.service.model.ResultQuery;
+
+import java.util.List;
 
 /**
  * Created by wuxinjun on 16/9/13.

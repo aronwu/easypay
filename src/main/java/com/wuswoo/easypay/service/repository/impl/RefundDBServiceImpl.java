@@ -94,7 +94,10 @@ public class RefundDBServiceImpl implements IRefundDBService {
     @Override
     public RefundResult getRefundResultByRefundIdAndTradeNo(Long refundId, String tradeNo)
         throws EasyPayException {
-        return null;
+        RefundResultExample example = new RefundResultExample();
+        example.createCriteria().andRefundIdEqualTo(refundId).andTradeNoEqualTo(tradeNo);
+        List<RefundResult> refundResults = refundResultMapper.selectByExample(example);
+        return (refundResults != null && refundResults.size() > 0) ? refundResults.get(0) : null;
     }
 
     @Override
