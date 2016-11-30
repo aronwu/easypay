@@ -1,6 +1,5 @@
 package com.wuswoo.easypay.service.job;
 
-import com.wuswoo.easypay.service.model.Platform;
 import com.wuswoo.easypay.service.model.RefundResult;
 import com.wuswoo.easypay.service.model.ResultQuery;
 import com.wuswoo.easypay.service.payment.IResultQueryService;
@@ -16,14 +15,14 @@ import java.util.List;
 /**
  * Created by wuxinjun on 16/11/28.
  */
-public class RefundQueryResultJob {
-    private static final Logger logger = LogManager.getLogger(RefundQueryResultJob.class);
+public class WechatRefundQueryResultJob {
+    private static final Logger logger = LogManager.getLogger(WechatRefundQueryResultJob.class);
 
     private IResultQueryDBService resultQueryDBService;
 
     private IRefundDBService refundDBService;
 
-    public RefundQueryResultJob() {}
+    public WechatRefundQueryResultJob() {}
     public void run() {
         logger.info("start run {}", logger.getName());
         logger.info("======================================================");
