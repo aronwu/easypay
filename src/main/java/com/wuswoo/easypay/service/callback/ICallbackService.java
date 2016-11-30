@@ -16,11 +16,4 @@ public interface ICallbackService {
      */
     boolean updatePaymentStatus(NotifySchedule notifySchedule);
 
-    /**
-     * 退款回调业务系统
-     * @param refundResults
-     * @return
-     */
-    boolean updateRefundStatus(List<RefundResult> refundResults);
-
 }

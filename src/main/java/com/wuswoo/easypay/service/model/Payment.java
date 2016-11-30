@@ -93,7 +93,7 @@ public class Payment {
     private String clientIp;
 
     @Column(name = "order_id")
-    private Integer orderId;
+    private Long orderId;
 
     @Column(name = "open_id")
     private String openId;
@@ -399,14 +399,14 @@ public class Payment {
     /**
      * @return order_id
      */
-    public Integer getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
     /**
      * @param orderId
      */
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 

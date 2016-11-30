@@ -1,24 +1,26 @@
 package com.wuswoo.easypay.service.platform.wechat_wap;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wuswoo.easypay.common.util.ThreadPoolUtil;
 import com.wuswoo.easypay.common.util.XMLUtil;
 import com.wuswoo.easypay.http.server.Request;
 import com.wuswoo.easypay.service.callback.ICallbackService;
 import com.wuswoo.easypay.service.exception.EasyPayException;
 import com.wuswoo.easypay.service.model.*;
 import com.wuswoo.easypay.service.payment.AbstractRefundService;
-import com.wuswoo.easypay.service.payment.IResultQueryService;
 import com.wuswoo.easypay.service.payment.contract.EasyPaymentResponse;
 import com.wuswoo.easypay.service.platform.wechat.util.WechatAppUtil;
 import com.wuswoo.easypay.service.repository.IPaymentDBService;
 import com.wuswoo.easypay.service.repository.IRefundDBService;
 import com.wuswoo.easypay.service.repository.IResultQueryDBService;
 import com.wuswoo.easypay.service.request.RefundRequest;
+import com.wuswoo.easypay.service.task.NotifyRefundResultsTask;
 import com.wuswoo.easypay.service.util.PayConstant;
 import com.wuswoo.easypay.service.util.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import weixin.popular.api.PayMchAPI;
 import weixin.popular.bean.paymch.SecapiPayRefund;
 import weixin.popular.bean.paymch.SecapiPayRefundResult;
@@ -39,6 +41,7 @@ public class WechatWapRefundServiceImpl extends AbstractRefundService {
     private IRefundDBService refundDBService;
 
     @Autowired
+    @Qualifier("callbackServiceFactory")
     private ICallbackService callbackService;
 
     @Autowired
@@ -126,9 +129,14 @@ public class WechatWapRefundServiceImpl extends AbstractRefundService {
         refund.setSuccessNum((short)successes);
         refundDBService.updateRefund(refund);
         response.setData(refund);
-        callbackService.updateRefundStatus(lstNotifies);
+        //提醒业务系统退款请求结果
+        notifyRefundResults(lstNotifies);
         return response;
+    }
 
+    private void notifyRefundResults(List<RefundResult> lstNotifies) {
+        NotifyRefundResultsTask task = new NotifyRefundResultsTask(callbackService, lstNotifies);
+        ThreadPoolUtil.getExecutor().execute(task);
     }
 
     @Override

@@ -97,7 +97,7 @@ public class RefundResult {
      * 订单系统退款流水号
      */
     @Column(name = "order_id")
-    private Integer orderId;
+    private Long orderId;
 
     /**
      * 退款类型(1：全部退款；2部分退款---返现)
@@ -405,7 +405,7 @@ public class RefundResult {
      *
      * @return order_id - 订单系统退款流水号
      */
-    public Integer getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
@@ -414,7 +414,7 @@ public class RefundResult {
      *
      * @param orderId 订单系统退款流水号
      */
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 

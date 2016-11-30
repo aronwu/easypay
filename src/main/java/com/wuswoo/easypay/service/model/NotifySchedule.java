@@ -54,7 +54,15 @@ public class NotifySchedule {
     @Column(name = "payment_code")
     private String paymentCode;
 
+    @Column(name = "order_id")
+    private Long orderId;
+
     private Byte status;
+
+    private String message;
+
+    @Column(name = "refund_code")
+    private String refundCode;
 
     /**
      * 退款类(1：全部退款；2部分退款---返现)
@@ -74,8 +82,11 @@ public class NotifySchedule {
     @Column(name = "updated_time")
     private Date updatedTime;
 
-    @Column(name = "notify_error")
-    private String notifyError;
+    /**
+     * 通知结果
+     */
+    @Column(name = "notify_return")
+    private String notifyReturn;
 
     /**
      * @return id
@@ -232,6 +243,20 @@ public class NotifySchedule {
     }
 
     /**
+     * @return order_id
+     */
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    /**
+     * @param orderId
+     */
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    /**
      * @return status
      */
     public Byte getStatus() {
@@ -243,6 +268,34 @@ public class NotifySchedule {
      */
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    /**
+     * @return message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * @param message
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    /**
+     * @return refund_code
+     */
+    public String getRefundCode() {
+        return refundCode;
+    }
+
+    /**
+     * @param refundCode
+     */
+    public void setRefundCode(String refundCode) {
+        this.refundCode = refundCode;
     }
 
     /**
@@ -300,16 +353,20 @@ public class NotifySchedule {
     }
 
     /**
-     * @return notify_error
+     * 获取通知结果
+     *
+     * @return notify_return - 通知结果
      */
-    public String getNotifyError() {
-        return notifyError;
+    public String getNotifyReturn() {
+        return notifyReturn;
     }
 
     /**
-     * @param notifyError
+     * 设置通知结果
+     *
+     * @param notifyReturn 通知结果
      */
-    public void setNotifyError(String notifyError) {
-        this.notifyError = notifyError;
+    public void setNotifyReturn(String notifyReturn) {
+        this.notifyReturn = notifyReturn;
     }
 }

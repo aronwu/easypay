@@ -14,10 +14,13 @@
     <result column="notify_status" jdbcType="TINYINT" property="notifyStatus" />
     <result column="notify_content" jdbcType="VARCHAR" property="notifyContent" />
     <result column="payment_code" jdbcType="VARCHAR" property="paymentCode" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="message" jdbcType="VARCHAR" property="message" />
+    <result column="refund_code" jdbcType="VARCHAR" property="refundCode" />
     <result column="refund_type" jdbcType="TINYINT" property="refundType" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
-    <result column="notify_error" jdbcType="LONGVARCHAR" property="notifyError" />
+    <result column="notify_return" jdbcType="LONGVARCHAR" property="notifyReturn" />
   </resultMap>
 </mapper>

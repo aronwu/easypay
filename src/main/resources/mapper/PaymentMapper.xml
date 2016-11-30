@@ -21,7 +21,7 @@
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="client_ip" jdbcType="VARCHAR" property="clientIp" />
-    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="open_id" jdbcType="VARCHAR" property="openId" />
     <result column="attach" jdbcType="VARCHAR" property="attach" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />

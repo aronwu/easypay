@@ -21,7 +21,7 @@
     <result column="return_code" jdbcType="VARCHAR" property="returnCode" />
     <result column="return_content" jdbcType="VARCHAR" property="returnContent" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="refund_type" jdbcType="INTEGER" property="refundType" />
     <result column="refund_error" jdbcType="VARCHAR" property="refundError" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />

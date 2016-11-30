@@ -14,6 +14,7 @@ import com.wuswoo.easypay.service.util.PayConstant;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -34,7 +35,9 @@ public class PaymentService implements IPaymentService {
     private IResultQueryDBService resultQueryDBService;
     @Autowired
     private NotifyScheduleMapper notifyScheduleMapper;
+
     @Autowired
+    @Qualifier("callbackServiceFactory")
     private ICallbackService callbackService;
 
     /**
@@ -99,11 +102,14 @@ public class PaymentService implements IPaymentService {
             for (RefundResult refundResult : refundResults) {
                 NotifySchedule notifySchedule = new NotifySchedule();
                 notifySchedule.setPaymentCode(refundResult.getPaymentCode());
+                notifySchedule.setOrderId(refundResult.getOrderId());
                 notifySchedule.setTradeId(refundResult.getId());
                 notifySchedule.setTradeType(PayConstant.NotifyResultType.REFUND.byteValue());
                 notifySchedule.setPlatformId(refundResult.getPlatformId());
+                notifySchedule.setRefundCode(refundResult.getRefundCode());
+                notifySchedule.setRefundType(refundResult.getRefundType().byteValue());
                 notifySchedule.setStatus(refundResult.getStatus());
-                notifySchedule.setNotifyError(refundResult.getRefundError());
+                notifySchedule.setMessage(refundResult.getRefundError());
                 callbackService.updatePaymentStatus(notifySchedule);
             }
         }

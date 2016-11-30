@@ -1,16 +1,3 @@
-CREATE TABLE application
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name VARCHAR(255) COMMENT '应用名称',
-    white_list VARCHAR(1000) COMMENT 'IP白名单',
-    secret VARCHAR(255) COMMENT '安全key,用于md5签名认证',
-    public_key VARCHAR(3000) COMMENT 'pulic key,用于PKI签名校验返回结果',
-    private_key VARCHAR(5000) COMMENT '生成签名的私钥',
-    app_public_key VARCHAR(3000) COMMENT '应用提供的public key,用于PKI签名校验应用提交的请求',
-    app_code VARCHAR(32),
-    created_time DATETIME NOT NULL COMMENT '创建时间',
-    updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '更新时间'
-);
 CREATE TABLE notify_failed_log
 (
     id BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -33,8 +20,11 @@ CREATE TABLE notify_schedule
     notify_status TINYINT(2) DEFAULT '1' NOT NULL COMMENT '通知状态 0未通知 1通知失败结束 2通知成功结束',
     notify_content VARCHAR(8000) COMMENT '通知内容',
     payment_code VARCHAR(32) NOT NULL,
-    notify_error TEXT,
+    order_id BIGINT(20) DEFAULT '0',
+    notify_return TEXT COMMENT '通知结果',
     status TINYINT(4),
+    message VARCHAR(800),
+    refund_code VARCHAR(50),
     refund_type TINYINT(4) DEFAULT '0' COMMENT '退款类(1：全部退款；2部分退款---返现)',
     created_time DATETIME NOT NULL COMMENT '创建时间',
     updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '更新时间'
@@ -58,7 +48,7 @@ CREATE TABLE payment
     status TINYINT(2) DEFAULT '0' NOT NULL COMMENT '支付状态 0等待支付 1成功 10失败',
     user_id BIGINT(20) DEFAULT '0' NOT NULL COMMENT '下订用户ID',
     client_ip VARCHAR(50) COMMENT '进行支付的买家IP',
-    order_id INT(11),
+    order_id BIGINT(20),
     open_id VARCHAR(200),
     attach VARCHAR(500),
     created_time DATETIME NOT NULL COMMENT '创建时间',
@@ -153,7 +143,7 @@ CREATE TABLE refund_result
     return_code VARCHAR(255) COMMENT '第三方的状态代码',
     return_content VARCHAR(2000) COMMENT '第三方平台返回的原始结果',
     user_id BIGINT(20),
-    order_id INT(11) NOT NULL COMMENT '订单系统退款流水号',
+    order_id BIGINT(20) NOT NULL COMMENT '订单系统退款流水号',
     refund_type INT(11) NOT NULL COMMENT '退款类型(1：全部退款；2部分退款---返现)',
     refund_error VARCHAR(2000),
     created_time DATETIME NOT NULL COMMENT '创建时间',
