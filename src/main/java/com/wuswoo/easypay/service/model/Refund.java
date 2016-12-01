@@ -27,41 +27,6 @@ public class Refund {
     private String refundBatchCode;
 
     /**
-     * 支付平台返回的支付结果交易号
-     */
-    @Column(name = "refund_trade_no")
-    private String refundTradeNo;
-
-    /**
-     * 退款状态 (0:"未退款",1:"退款中",2:"退款失败",3:"退款成功")
-     */
-    private Byte status;
-
-    /**
-     * 第三方平台的错误代码
-     */
-    @Column(name = "return_code")
-    private String returnCode;
-
-    /**
-     * 第三方平台返回的原始结果
-     */
-    @Column(name = "return_content")
-    private String returnContent;
-
-    /**
-     * 通知时间
-     */
-    @Column(name = "notify_time")
-    private Date notifyTime;
-
-    /**
-     * 结果通知状态 0未通知 1 已接收 2 退款成功确认
-     */
-    @Column(name = "notify_status")
-    private Byte notifyStatus;
-
-    /**
      * 成功退款笔数
      */
     @Column(name = "success_num")
@@ -78,9 +43,6 @@ public class Refund {
      */
     @Column(name = "user_id")
     private Long userId;
-
-    @Column(name = "order_id")
-    private Integer orderId;
 
     /**
      * 创建时间
@@ -163,114 +125,6 @@ public class Refund {
     }
 
     /**
-     * 获取支付平台返回的支付结果交易号
-     *
-     * @return refund_trade_no - 支付平台返回的支付结果交易号
-     */
-    public String getRefundTradeNo() {
-        return refundTradeNo;
-    }
-
-    /**
-     * 设置支付平台返回的支付结果交易号
-     *
-     * @param refundTradeNo 支付平台返回的支付结果交易号
-     */
-    public void setRefundTradeNo(String refundTradeNo) {
-        this.refundTradeNo = refundTradeNo;
-    }
-
-    /**
-     * 获取退款状态 (0:"未退款",1:"退款中",2:"退款失败",3:"退款成功")
-     *
-     * @return status - 退款状态 (0:"未退款",1:"退款中",2:"退款失败",3:"退款成功")
-     */
-    public Byte getStatus() {
-        return status;
-    }
-
-    /**
-     * 设置退款状态 (0:"未退款",1:"退款中",2:"退款失败",3:"退款成功")
-     *
-     * @param status 退款状态 (0:"未退款",1:"退款中",2:"退款失败",3:"退款成功")
-     */
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    /**
-     * 获取第三方平台的错误代码
-     *
-     * @return return_code - 第三方平台的错误代码
-     */
-    public String getReturnCode() {
-        return returnCode;
-    }
-
-    /**
-     * 设置第三方平台的错误代码
-     *
-     * @param returnCode 第三方平台的错误代码
-     */
-    public void setReturnCode(String returnCode) {
-        this.returnCode = returnCode;
-    }
-
-    /**
-     * 获取第三方平台返回的原始结果
-     *
-     * @return return_content - 第三方平台返回的原始结果
-     */
-    public String getReturnContent() {
-        return returnContent;
-    }
-
-    /**
-     * 设置第三方平台返回的原始结果
-     *
-     * @param returnContent 第三方平台返回的原始结果
-     */
-    public void setReturnContent(String returnContent) {
-        this.returnContent = returnContent;
-    }
-
-    /**
-     * 获取通知时间
-     *
-     * @return notify_time - 通知时间
-     */
-    public Date getNotifyTime() {
-        return notifyTime;
-    }
-
-    /**
-     * 设置通知时间
-     *
-     * @param notifyTime 通知时间
-     */
-    public void setNotifyTime(Date notifyTime) {
-        this.notifyTime = notifyTime;
-    }
-
-    /**
-     * 获取结果通知状态 0未通知 1 已接收 2 退款成功确认
-     *
-     * @return notify_status - 结果通知状态 0未通知 1 已接收 2 退款成功确认
-     */
-    public Byte getNotifyStatus() {
-        return notifyStatus;
-    }
-
-    /**
-     * 设置结果通知状态 0未通知 1 已接收 2 退款成功确认
-     *
-     * @param notifyStatus 结果通知状态 0未通知 1 已接收 2 退款成功确认
-     */
-    public void setNotifyStatus(Byte notifyStatus) {
-        this.notifyStatus = notifyStatus;
-    }
-
-    /**
      * 获取成功退款笔数
      *
      * @return success_num - 成功退款笔数
@@ -322,20 +176,6 @@ public class Refund {
      */
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    /**
-     * @return order_id
-     */
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    /**
-     * @param orderId
-     */
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
     }
 
     /**

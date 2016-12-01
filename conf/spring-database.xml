@@ -57,8 +57,8 @@
     </tx:advice>
     
     <aop:config>
-		<aop:pointcut id="appOrderService" expression="execution(* com.wuswoo.easypay.service..*Service*.*(..))" />
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="appOrderService" order="1"/>
+		<aop:pointcut id="appPaymentService" expression="execution(* com.wuswoo.easypay.service..*Service*.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="appPaymentService" order="1"/>
     </aop:config>
 
 

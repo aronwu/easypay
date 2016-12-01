@@ -18,6 +18,6 @@ public interface PaymentExtMapper extends PaymentResultMapper {
 
     @Select("SELECT refund.* FROM refund, refund_result WHERE refund.id = refund_result.refund_id"
         + " AND refund_result.refund_code = #{refundCode} LIMIT 1")
-    Refund getRefunByRefundCode(@Param("refundCode") String refundCode);
+    Refund getRefundByRefundCode(@Param("refundCode") String refundCode);
 
 }

@@ -2,30 +2,27 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
-       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
 		 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
-		 http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
 		 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.1.xsd
 		 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <!-- Annotation扫描 -->
     <context:annotation-config />
-    <import resource="spring-properties.xml" />
-    <import resource="spring-database.xml"/>
     <context:component-scan base-package="com.wuswoo.easypay" />
     <aop:aspectj-autoproxy expose-proxy="true"/>
     <task:annotation-driven />
+    <import resource="spring-properties.xml" />
+    <import resource="spring-database.xml"/>
     <import resource="spring-quartz.xml"/>
     <import resource="platforms/spring-*.xml" />
+    <import resource="misc/spring-*.xml" />
     <bean id="contractAspect" class="com.wuswoo.easypay.service.aspect.ContractAspect"></bean>
 </beans>

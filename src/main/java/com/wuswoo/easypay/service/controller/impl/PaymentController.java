@@ -105,6 +105,11 @@ public class PaymentController implements IPaymentController {
                 if (paymentResult == null){
                     throw new EasyPayException(String.format("没有找到支付单号:%s", refundResult.getPaymentCode()), EasyPayException.UNKNOWN_ERROR);
                 }
+                refundResult.setPlatformId(paymentResult.getPlatformId());
+                refundResult.setTradeNo(paymentResult.getTradeNo());
+                refundResult.setRefundAmount(null);
+                refundResult.setStatus(null);
+                refundResult.setReturnCode(null);
             }
             refund.setPlatformId(easyRefundRequest.getBatchRefunds().get(0).getPlatformId());
             IRefundService refundService = PaymentServiceFactory.getRefundService(refund.getPlatformId());

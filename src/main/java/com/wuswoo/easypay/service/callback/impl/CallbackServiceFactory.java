@@ -1,5 +1,6 @@
 package com.wuswoo.easypay.service.callback.impl;
 
+import com.wuswoo.easypay.common.util.MyApplicationContext;
 import com.wuswoo.easypay.common.util.ThreadPoolUtil;
 import com.wuswoo.easypay.service.callback.ICallbackService;
 import com.wuswoo.easypay.service.callback.ICallbackTask;
@@ -20,8 +21,8 @@ import java.util.List;
 public class CallbackServiceFactory implements ICallbackService {
     private static final Logger logger = LogManager.getLogger(CallbackServiceFactory.class);
 
-    @Value("${easypay.callback.task.classname}")
-    private String callbackTaskClassName;
+    @Value("${easypay.callback.task.beanId}")
+    private String callbackTaskbeanId;
 
     @Override
     public boolean updatePaymentStatus(NotifySchedule notifySchedule) {
@@ -30,7 +31,7 @@ public class CallbackServiceFactory implements ICallbackService {
             ThreadPoolUtil.getExecutor().execute(task);
             return true;
         } catch (ClassNotFoundException ex) {
-            logger.error("callback task classname: {} is not found", callbackTaskClassName);
+            logger.error("callback task beanId: {} is not found", callbackTaskbeanId);
         } catch(Exception ex){
             logger.error("callback task error", ex);
         }
@@ -38,7 +39,7 @@ public class CallbackServiceFactory implements ICallbackService {
     }
 
     private ICallbackTask getCallbackTask(NotifySchedule notifySchedule) throws Exception {
-        ICallbackTask task = (ICallbackTask) Class.forName(callbackTaskClassName).newInstance();
+        ICallbackTask task = (ICallbackTask) MyApplicationContext.getInstance().getBean(callbackTaskbeanId);
         task.setNotifySchedule(notifySchedule);
         return task;
     }

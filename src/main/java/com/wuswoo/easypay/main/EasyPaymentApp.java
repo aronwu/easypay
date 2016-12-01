@@ -9,7 +9,9 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import weixin.popular.client.LocalHttpClient;
 
+import java.io.File;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -18,6 +20,22 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class EasyPaymentApp extends BaseNioServer {
 
     private static final Logger logger = LogManager.getLogger(EasyPaymentApp.class);
+
+    static
+    {
+        /** 加载 log4j2 配置文件 */
+        File file = new File("conf/log4j2.xml");
+        String log4jCfgFile =file.getAbsolutePath();
+        System.setProperty("log4j.configurationFile", log4jCfgFile);
+        /** 加载 微信APP证书 */
+        File wechatCertLocation = new File("conf/certs/weixin_app_cert/apiclient_cert.p12");
+        LocalHttpClient.initMchKeyStore("1250908001", wechatCertLocation.getAbsolutePath());
+        /** 加载 微信WAP证书 */
+        File wechatWapCertLocation = new File("conf/certs/weixin_wap_cert/apiclient_cert.p12");
+        LocalHttpClient.initMchKeyStore("1372405302", wechatWapCertLocation.getAbsolutePath());
+
+        //		checkHttpProxy();
+    }
 
     public EasyPaymentApp() {
     }

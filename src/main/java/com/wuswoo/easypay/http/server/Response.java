@@ -27,6 +27,7 @@ public class Response implements FullHttpResponse {
         this.channel = channel;
         response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         timeCost = new TimeCost();
+        timeCost.start();
     }
 
     //----------------------------------------------------------------------------

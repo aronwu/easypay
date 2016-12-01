@@ -42,5 +42,17 @@ public interface IPaymentService {
      */
     public EasyPaymentResponse generatePaymentRequest(Payment payment, PaymentRequest paymentRequest);
 
+    /**
+     * 保存业务系统通知记录
+     * @param notifySchedule
+     * @return
+     */
+    public boolean saveNotifySchedule(NotifySchedule notifySchedule);
 
+    /**
+     * 更新业务系统通知记录
+     * @param notifySchedule
+     * @return
+     */
+    public boolean updateNotifySchedule(NotifySchedule notifySchedule);
 }

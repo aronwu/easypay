@@ -8,19 +8,19 @@ package com.wuswoo.easypay.service.util;
 public class PayConstant {
 
     /** 代码 */
-    public int code;
+    public short code;
     /** 描述 */
     public String description;
 
-    public PayConstant(int code)
+    public PayConstant(Number num)
     {
-        this(code, "");
+        this(num, "");
     }
 
-    public PayConstant(int code, String description)
+    public PayConstant(Number num, String desc)
     {
-        code	= code;
-        description	= description;
+        code	= num.shortValue();
+        description	= desc;
     }
 
     public final int intValue() {
@@ -118,6 +118,13 @@ public class PayConstant {
     public static class ResultQuery
     {
         public static final byte MAX_QUERY							= 50;
+    }
+
+
+    public static class NotifyEvent
+    {
+        public static final String PAYMENT = "payment.notify.payment";
+        public static final String REFUND = "payment.notify.refund";
     }
 
 

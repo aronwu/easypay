@@ -99,31 +99,39 @@ public class WechatWapRefundServiceImpl extends AbstractRefundService {
                 refundResult.setRefundTradeNo(wechatResult.getRefund_id());
                 refundResult.setRefundAmount(wechatResult.getRefund_fee());
                 refundResult.setRefundChannel(wechatResult.getRefund_channel());
+                if (!"SUCCESS".equalsIgnoreCase(wechatResult.getResult_code())) {
+                    refundResult.setRefundError(wechatResult.getErr_code_des());
+                }
                 try {
                     refundResult.setReturnContent(XMLUtil.convertToXML(wechatResult));
                 } catch(Exception e) {
                     refundResult.setReturnContent(JSONObject.toJSONString(wechatResult, true));
                 }
-
+                logger.info("refund result: {}", JSONObject.toJSONString(refundResult));
                 refundDBService.updateRefundResult(refundResult);
-
                 if ("SUCCESS".equalsIgnoreCase(wechatResult.getResult_code())) {
                     successes ++;
                     resultQueryDBService.createResultQuery(PayConstant.PlatformType.WEIXINWAP.intValue(),
                         PayConstant.NotifyResultType.REFUND.byteValue(),
                         refundResult.getId()
                         );
-                    lstNotifies.add(refundResult);
-
-                } else {
-                    refundResult.setRefundError(wechatResult.getErr_code_des());
                 }
+                lstNotifies.add(refundResult);
             } else {
                 String msg = String.format("发送微信退款请求失败code:%s,msg:%s", wechatResult.getReturn_code()
                     ,wechatResult.getReturn_msg());
                 refundResult.setRefundError(msg);
+                refundResult.setReturnCode(wechatResult.getReturn_code());
                 refundResult.setStatus(PayConstant.RefundStatus.REFUND_FAILED.byteValue());
+                try {
+                    refundResult.setReturnContent(XMLUtil.convertToXML(wechatResult));
+                } catch(Exception e) {
+                    refundResult.setReturnContent(JSONObject.toJSONString(wechatResult, true));
+                }
+                logger.info("error refund result: {}", JSONObject.toJSONString(refundResult));
+                refundDBService.updateRefundResult(refundResult);
                 lstNotifies.add(refundResult);
+
             }
         }
         refund.setSuccessNum((short)successes);

@@ -146,4 +146,20 @@ public class PaymentService implements IPaymentService {
         paymentResponse.setData(paymentRequest.getQueryParams());
         return paymentResponse;
     }
+
+    @Override
+    public boolean saveNotifySchedule(NotifySchedule notifySchedule) {
+        Date current = new Date();
+        notifySchedule.setCreatedTime(current);
+        notifySchedule.setUpdatedTime(current);
+        notifySchedule.setNotifyCount((byte)1);
+        return notifyScheduleMapper.insert(notifySchedule) > 0;
+    }
+
+    @Override
+    public boolean updateNotifySchedule(NotifySchedule notifySchedule) {
+        Date current = new Date();
+        notifySchedule.setUpdatedTime(current);
+        return notifyScheduleMapper.updateByPrimaryKeySelective(notifySchedule) > 0;
+    }
 }
