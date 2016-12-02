@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by wuxinjun on 16/9/23.
  */
 
-@Aspect()
+@Aspect
 public class ContractAspect {
     private static final Logger logger = LogManager.getLogger(ContractAspect.class);
     @Pointcut("@annotation (com.wuswoo.easypay.service.aspect.Contract)")
@@ -28,21 +28,16 @@ public class ContractAspect {
     @Around("contract()")
     public Object contract(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
-        logger.info("around contract");
         if (args != null && args.length > 1 && args[0] instanceof Request) {
             Request request = (Request) args[0];
             Method method = ReflectionUtil.getJoinPointMethod(joinPoint);
             Contract contract = method.getAnnotation(Contract.class);
-            logger.info(" contract: {}", contract);
             if (contract != null) {
                 Class<?> clazz = contract.value();
                 Object object = JSONObject.toJavaObject(request.json(), clazz);
-                logger.info("request json: {}", request.json());
                 Map<String, List<String>> validationResult = ValidationUtil.validator(object, null);
-                logger.info("validaiton result: {}", JSONObject.toJSONString(validationResult));
                 if (validationResult == null || validationResult.size() == 0) {
                     request.setContract(object);
-                    logger.info(" set contract object: {}", object);
                     return joinPoint.proceed();
                 } else {
                     //throw validation errors exception
