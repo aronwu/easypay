@@ -59,14 +59,12 @@ public class PaymentService implements IPaymentService {
         }
 
         PaymentResult existedPaymentResult = paymentDBService.getPaymentResult(paymentResult.getPaymentCode());
-
         if (existedPaymentResult != null && existedPaymentResult.getStatus() != null) {
             //已经成功支付,不更新记录,会通知业务系统
             if ( PayConstant.PaymentStatus.SUCCESS.byteValue() != existedPaymentResult.getStatus().byteValue()) {
                 //没有支付成功用最新
                 paymentDBService.savePaymentResult(paymentResult);
             }
-
             if (PayConstant.PaymentStatus.SUCCESS.byteValue() == paymentResult.getStatus().byteValue() && !ignoreNotify) {
                 NotifySchedule notifySchedule = new NotifySchedule();
                 notifySchedule.setPaymentCode(paymentResult.getPaymentCode());
@@ -76,6 +74,7 @@ public class PaymentService implements IPaymentService {
                 notifySchedule.setStatus(PayConstant.PaymentStatus.SUCCESS.byteValue());
                 callbackService.updatePaymentStatus(notifySchedule);
             }
+            result = true;
         } else {
 
             int saveResult = paymentDBService.savePaymentResult(paymentResult);
@@ -139,10 +138,8 @@ public class PaymentService implements IPaymentService {
             paymentResponse.setCode("200");
             paymentResponse.setMessage("");
         }
-        //支付宝支付处理
-        if (payment.getPlatformId().intValue() == PayConstant.PlatformType.ALIPAYAPP.intValue()) {
-            paymentRequest.sign();
-        }
+        //TODO
+        // 支付宝支付处理
         paymentResponse.setData(paymentRequest.getQueryParams());
         return paymentResponse;
     }

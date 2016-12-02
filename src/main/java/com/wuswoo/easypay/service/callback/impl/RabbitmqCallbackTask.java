@@ -57,7 +57,7 @@ public class RabbitmqCallbackTask implements ICallbackTask {
 
     @Override
     public void run() {
-        logger.info("start to notify rabbitmq server: {}", notifySchedule);
+        logger.info("start to notify rabbitmq server: {}", JSON.toJSONString(notifySchedule));
         //check paymentCode existed or not
         try {
             Payment payment = paymentDBService.getPaymentByPaymentCode(notifySchedule.getPaymentCode());
@@ -76,8 +76,8 @@ public class RabbitmqCallbackTask implements ICallbackTask {
         if (existedNotifySchedule != null) {
             notifySchedule.setId(existedNotifySchedule.getId());
             //如果已经通知成功,直接返回
-            if (notifySchedule.getStatus() != null &&
-                notifySchedule.getStatus().byteValue() == existedNotifySchedule.getStatus().byteValue()) {
+            if (notifySchedule.getNotifyStatus() != null &&
+                notifySchedule.getNotifyStatus().byteValue() == existedNotifySchedule.getNotifyStatus().byteValue()) {
                 return;
             }
         }
@@ -97,41 +97,35 @@ public class RabbitmqCallbackTask implements ICallbackTask {
             event.setAppCode(appCode);
             event.setContent((JSON)JSON.toJSON(notifySchedule));
             sendNotify(event);
+            logger.info("send message to rabbitmq success.");
             //更新数据库
-            if (notifySchedule.getId() != null && notifySchedule.getId() > 0) {
-                NotifySchedule newNs = new NotifySchedule();
-                newNs.setId(notifySchedule.getId());
-                newNs.setNotifyStatus(PayConstant.NotifyResultStatus.SUCCESS.byteValue());
-                newNs.setUpdatedTime(new Date());
-                paymentService.updateNotifySchedule(newNs);
-            } else {
-                notifySchedule.setNotifyStatus(PayConstant.NotifyResultStatus.SUCCESS.byteValue());
-                notifySchedule.setUpdatedTime(new Date());
-                paymentService.saveNotifySchedule(notifySchedule);
-            }
+            updateNotifySchedule(PayConstant.NotifyResultStatus.SUCCESS.byteValue(), "");
         } catch (Exception ex) {
             ex.printStackTrace();
             logger.error("回调业务系统出现错误", ex);
-            if (notifySchedule.getId() != null && notifySchedule.getId() > 0) {
-                NotifySchedule newNs = new NotifySchedule();
-                newNs.setId(notifySchedule.getId());
-                newNs.setNotifyStatus(PayConstant.NotifyResultStatus.FAIL.byteValue());
-                newNs.setUpdatedTime(new Date());
-                newNs.setNotifyReturn(ex.getMessage());
-                newNs.setNotifyCount((byte)(notifySchedule.getNotifyCount() + 1));
-                paymentService.updateNotifySchedule(newNs);
-            } else {
-                notifySchedule.setNotifyStatus(PayConstant.NotifyResultStatus.FAIL.byteValue());
-                notifySchedule.setUpdatedTime(new Date());
-                notifySchedule.setNotifyReturn(ex.getMessage());
-                notifySchedule.setNotifyCount((byte)(notifySchedule.getNotifyCount() + 1));
-                paymentService.saveNotifySchedule(notifySchedule);
-            }
+            updateNotifySchedule(PayConstant.NotifyResultStatus.FAIL.byteValue(), ex.getMessage());
         }
     }
 
     public void sendNotify(PaymentEvent event)
     {
         paymentEventMQSender.sendAsync(event.getEventType(), event);
+    }
+
+    private void updateNotifySchedule(Byte status, String message) {
+        //更新数据库
+        if (notifySchedule.getId() != null && notifySchedule.getId() > 0) {
+            NotifySchedule newNs = new NotifySchedule();
+            newNs.setId(notifySchedule.getId());
+            newNs.setNotifyStatus(status);
+            newNs.setUpdatedTime(new Date());
+            newNs.setNotifyReturn(message);
+            paymentService.updateNotifySchedule(newNs);
+        } else {
+            notifySchedule.setNotifyStatus(status);
+            notifySchedule.setUpdatedTime(new Date());
+            notifySchedule.setNotifyReturn(message);
+            paymentService.saveNotifySchedule(notifySchedule);
+        }
     }
 }

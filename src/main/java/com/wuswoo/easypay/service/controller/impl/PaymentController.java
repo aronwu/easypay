@@ -44,9 +44,6 @@ public class PaymentController implements IPaymentController {
     private IPaymentDBService paymentDBService;
 
     @Autowired
-    private IRefundDBService refundDBService;
-
-    @Autowired
     private IPaymentService zhifuService;
 
     @Override
