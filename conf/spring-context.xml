@@ -19,10 +19,21 @@
     <context:component-scan base-package="com.wuswoo.easypay" />
     <aop:aspectj-autoproxy expose-proxy="true"/>
     <task:annotation-driven />
+    <!-- 加载property配置 -->
     <import resource="spring-properties.xml" />
+    <!-- 数据库spring配置 -->
     <import resource="spring-database.xml"/>
+    <!-- 脚本任务spring配置 -->
     <import resource="spring-quartz.xml"/>
+    <!-- 第三方支付系统spring配置 -->
     <import resource="platforms/spring-*.xml" />
-    <import resource="misc/spring-*.xml" />
+    <!-- 回调业务系统配置 -->
+    <import resource="misc/spring-callback.xml" />
+    <!-- 如果不用rabbitmq作为消息队列回调业务系统,注释下面rabbitmq 相关spring配置 -->
+    <import resource="misc/spring-rabbit.xml" />
+    <!-- 正式环境下注释下面rabbitmq demo listenser -->
+    <import resource="misc/spring-rabbit-demo-lisener.xml" />
+
+
     <bean id="contractAspect" class="com.wuswoo.easypay.service.aspect.ContractAspect"></bean>
 </beans>

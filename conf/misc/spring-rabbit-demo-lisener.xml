@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		 http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd">
+
+    <!-- ================= MQ Listener Handler 监听队列配置 ================= -->
+    <!-- 支付用于测试 -->
+    <rabbit:listener-container connection-factory="miscRabbitmqConnectionFactory" acknowledge="auto" message-converter="jsonMessageConvertor">
+        <rabbit:listener queue-names="queue.payment.log" ref="paymentLogTestListener" method="reply"/>
+    </rabbit:listener-container>
+    <bean id="paymentLogTestListener" class="com.wuswoo.easypay.service.misc.rabbitmq.PaymentLogTestListener"	/>
+</beans>

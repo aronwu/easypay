@@ -13,7 +13,7 @@
 	
 	<!-- misc vhost 连接工厂 -->
 	<rabbit:connection-factory
-		id="miscConnectionFactory"
+		id="miscRabbitmqConnectionFactory"
 		addresses="${mq.addresses}"
 		virtual-host="${mq.vhostMisc}"
 		username="${mq.username}"
@@ -24,7 +24,7 @@
 	/>
 	
 	<!-- misc vhost 管理器 -->
-	<rabbit:admin id="miscAdmin" connection-factory="miscConnectionFactory"/>
+	<rabbit:admin id="miscAdmin" connection-factory="miscRabbitmqConnectionFactory"/>
 	
 	<!-- JSON 消息转换器 -->
 	<bean id="jsonMessageConvertor" class="com.wuswoo.easypay.service.misc.rabbitmq.FastJsonMessageConverter"/>
@@ -44,15 +44,13 @@
 	
 	<!-- 发送方: AMQP Template -->
 	
-	<rabbit:template id="appEventTemplate" connection-factory="miscConnectionFactory" exchange="exchange.payment.AppEvent" message-converter="jsonMessageConvertor"/>
+	<rabbit:template id="appEventTemplate" connection-factory="miscRabbitmqConnectionFactory" exchange="exchange.payment.AppEvent" message-converter="jsonMessageConvertor"/>
 	
 	<bean id="appEventMQSender" class="com.wuswoo.easypay.service.misc.rabbitmq.MQSender" p:template-ref="appEventTemplate"/>
 	
 	<!-- ================= PaymentEvent 消息队列配置 ================= -->
-		
-	<!-- ================= Message Center Event 消息队列配置 ================= -->
 
-	<!-- 支付系统支付和退款消息回调队列 -->
+	<!-- 支付系统支付和退款消息回调消息队列 -->
 	<rabbit:queue name="queue.payment.notify" declared-by="miscAdmin" auto-declare="true" auto-delete="false" durable="true" exclusive="false">
 		<rabbit:queue-arguments>
 			<entry key="x-max-length" value="1000000" value-type="java.lang.Long"/>
@@ -60,13 +58,13 @@
 		</rabbit:queue-arguments>
 	</rabbit:queue>
 
-	<!-- 支付系统所有消息日志队列 -->
+	<!-- 支付系统所有消息日志消息队列 -->
 	<rabbit:queue name="queue.payment.log" declared-by="miscAdmin" auto-declare="true" auto-delete="false" durable="true" exclusive="false">
 		<rabbit:queue-arguments>
 			<entry key="x-max-length" value="1000000" value-type="java.lang.Long"/>
 			<entry key="x-max-length-bytes" value="300485760" value-type="java.lang.Long"/>
 		</rabbit:queue-arguments>
 	</rabbit:queue>	
-	<!-- ================= Message Center Event 消息队列配置 ================= -->
+	<!-- ================= PaymentEvent 消息队列配置 ======= ========== -->
 
 </beans>

@@ -116,6 +116,8 @@ public class WechatWapRefundServiceImpl extends AbstractRefundService {
                         refundResult.getId()
                         );
                 }
+                //TODO
+                //交易余额不足，使用微信余额退款
                 lstNotifies.add(refundResult);
             } else {
                 String msg = String.format("发送微信退款请求失败code:%s,msg:%s", wechatResult.getReturn_code()
