@@ -81,6 +81,7 @@ public class KafkaCallbackTask implements ICallbackTask {
         //notifySchedule.setNotifyContent(JSON.toJSONString(notifySchedule));
         if (existedNotifySchedule != null) {
             notifySchedule.setId(existedNotifySchedule.getId());
+            notifySchedule.setNotifyCount(existedNotifySchedule.getNotifyCount());
             //如果已经通知成功,直接返回
             if (notifySchedule.getNotifyStatus() != null &&
                 notifySchedule.getNotifyStatus().byteValue() == existedNotifySchedule.getNotifyStatus().byteValue()) {
@@ -137,6 +138,7 @@ public class KafkaCallbackTask implements ICallbackTask {
             newNs.setNotifyStatus(status);
             newNs.setUpdatedTime(new Date());
             newNs.setNotifyReturn(message);
+            newNs.setNotifyCount((byte)(notifySchedule.getNotifyCount() + 1));
             paymentService.updateNotifySchedule(newNs);
         } else {
             notifySchedule.setNotifyStatus(status);
