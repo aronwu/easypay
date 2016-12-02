@@ -152,13 +152,13 @@ public class WechatWapRefundServiceImpl extends AbstractRefundService {
     @Override
     public String responseToPaymentPlatform(boolean success) {
         return success ? "<xml>"
-            +" <return_code><![CDATA[SUCCESS]]></return_code>"
-            +" <return_msg><![CDATA[OK]]></return_msg>"
-            +" </xml>"
+            + "<return_code><![CDATA[SUCCESS]]></return_code>"
+            + "<return_msg><![CDATA[OK]]></return_msg>"
+            + "</xml>"
             : "<xml>"
-            +" <return_code><![CDATA[FAIL]]></return_code>"
-            +" <return_msg><![CDATA[更新失败]]></return_msg>"
-            +" </xml>";
+            + "<return_code><![CDATA[FAIL]]></return_code>"
+            + "<return_msg><![CDATA[更新失败]]></return_msg>"
+            + "</xml>";
     }
 
     @Override

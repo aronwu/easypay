@@ -15,10 +15,12 @@ import com.wuswoo.easypay.service.util.PaymentServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 /**
  * Created by wuxinjun on 16/11/14.
  */
+@Controller("notifyController")
 public class NotifyController implements INotifyController {
     private static final Logger logger = LogManager.getLogger(NotifyController.class);
 

@@ -110,13 +110,13 @@ public class WechatWapPaymentServiceImpl extends AbstractPaymentService {
     @Override
     public String returnPaymentPlatform(PaymentResult paymentResult, Boolean resultStatus) {
         return resultStatus ? "<xml>"
-            +" <return_code><![CDATA[SUCCESS]]></return_code>"
-            +" <return_msg><![CDATA[OK]]></return_msg>"
-            +" </xml>"
+            + "<return_code><![CDATA[SUCCESS]]></return_code>"
+            + "<return_msg><![CDATA[OK]]></return_msg>"
+            + "</xml>"
             : "<xml>"
-            +" <return_code><![CDATA[FAIL]]></return_code>"
-            +" <return_msg><![CDATA[处理失败]]></return_msg>"
-            +" </xml>";
+            + "<return_code><![CDATA[FAIL]]></return_code>"
+            + "<return_msg><![CDATA[处理失败]]></return_msg>"
+            + "</xml>";
     }
 
     @Override
@@ -126,7 +126,7 @@ public class WechatWapPaymentServiceImpl extends AbstractPaymentService {
         try {
             String contentXml = request.content().toString(Charset.forName("UTF-8"));
             MchPayNotify payNotify = XMLConverUtil.convertToObject(MchPayNotify.class, contentXml);
-            if ("SUCCESS".equalsIgnoreCase(payNotify.getReturn_code())) {
+            if (payNotify != null && "SUCCESS".equalsIgnoreCase(payNotify.getReturn_code())) {
                 if (!WechatAppUtil.validateMchPayNotifySign(payNotify, this.paymentRequest.getQueryParam("paterner_key"))) {
                     //验证失败
                     logger.error("微信支付回调签名验证失败:{0}", payNotify.getSign());
