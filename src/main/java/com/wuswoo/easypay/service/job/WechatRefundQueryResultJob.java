@@ -47,7 +47,7 @@ public class WechatRefundQueryResultJob {
                 PayConstant.PaymentResultType.REFUND.byteValue(), startTime);
         logger.info("wechat WAP 等待退款记录处理数目: {}", resultQueryList.size());
         IResultQueryService resultQueryService = PaymentServiceFactory.getQueryService(
-            PayConstant.PlatformType.WEIXINAPP.intValue());
+            PayConstant.PlatformType.WEIXINWAP.intValue());
         for(ResultQuery resultQuery : resultQueryList) {
             try {
                 logger.info("开始退款查询id:", resultQuery.getTradeId());
