@@ -9,6 +9,7 @@ import com.wuswoo.easypay.service.util.PayConstant;
 import com.wuswoo.easypay.service.util.PaymentServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -18,8 +19,10 @@ import java.util.List;
 public class WechatRefundQueryResultJob {
     private static final Logger logger = LogManager.getLogger(WechatRefundQueryResultJob.class);
 
+    @Autowired
     private IResultQueryDBService resultQueryDBService;
 
+    @Autowired
     private IRefundDBService refundDBService;
 
     public WechatRefundQueryResultJob() {}

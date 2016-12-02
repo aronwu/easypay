@@ -92,7 +92,7 @@ public class WechatWapRefundServiceImpl extends AbstractRefundService {
                 }
                 refundResult.setStatus(
                     "SUCCESS".equalsIgnoreCase(wechatResult.getResult_code()) ?
-                        PayConstant.RefundStatus.REFUND_SUCCESS.byteValue() :
+                        PayConstant.RefundStatus.REFUND_IN_PROCESS.byteValue() :
                         PayConstant.RefundStatus.REFUND_FAILED.byteValue()
                 );
                 refundResult.setReturnCode(wechatResult.getReturn_code());
