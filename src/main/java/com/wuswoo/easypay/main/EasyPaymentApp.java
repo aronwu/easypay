@@ -27,6 +27,9 @@ public class EasyPaymentApp extends BaseNioServer {
         File file = new File("conf/log4j2.xml");
         String log4jCfgFile =file.getAbsolutePath();
         System.setProperty("log4j.configurationFile", log4jCfgFile);
+
+        //TODO
+        //根据配置文件来设置
         /** 加载 微信APP证书 */
         File wechatCertLocation = new File("conf/certs/weixin_app_cert/apiclient_cert.p12");
         LocalHttpClient.initMchKeyStore("1250908001", wechatCertLocation.getAbsolutePath());

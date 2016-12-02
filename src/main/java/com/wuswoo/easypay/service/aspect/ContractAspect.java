@@ -46,10 +46,14 @@ public class ContractAspect {
                     return joinPoint.proceed();
                 } else {
                     //throw validation errors exception
+                    //TODO
+                    //格式化Exception内容
                     throw new Exception();
                 }
             } else {
                 //throw no contract class value  exception
+                //TODO
+                //格式化Exception内容
                 throw new Exception();
             }
         } else {

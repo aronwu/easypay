@@ -130,7 +130,8 @@ public class RouterHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
             ex.setMessage("Missing uri: " + mp.uri());
             response.respondJson(ex);
         } else {
-
+            //TODO
+            //统一格式化成HttpExceptionResponse输出
             logger.error("Server error: {}\nWhen processing request: {}", e, request);
             response.setStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
             response.respondText("Internal Server Error");
