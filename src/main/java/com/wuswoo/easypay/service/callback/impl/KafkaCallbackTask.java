@@ -84,7 +84,8 @@ public class KafkaCallbackTask implements ICallbackTask {
             notifySchedule.setNotifyCount(existedNotifySchedule.getNotifyCount());
             //如果已经通知成功,直接返回
             if (notifySchedule.getNotifyStatus() != null &&
-                notifySchedule.getNotifyStatus().byteValue() == existedNotifySchedule.getNotifyStatus().byteValue()) {
+                PayConstant.NotifyResultStatus.SUCCESS.byteValue() == existedNotifySchedule.getNotifyStatus().byteValue()) {
+                logger.info("already notify to kafka server.");
                 return;
             }
         }
