@@ -27,13 +27,17 @@
     <import resource="spring-quartz.xml"/>
     <!-- 第三方支付系统spring配置 -->
     <import resource="platforms/spring-*.xml" />
+
     <!-- 回调业务系统配置 -->
-    <import resource="misc/spring-callback.xml" />
+    <!-- 如果不用http作为消息队列回调业务系统,注释下面http 相关spring配置 -->
+    <import resource="misc/spring-http.xml" />
     <!-- 如果不用rabbitmq作为消息队列回调业务系统,注释下面rabbitmq 相关spring配置 -->
     <import resource="misc/spring-rabbit.xml" />
     <!-- 正式环境下注释下面rabbitmq demo listenser -->
     <import resource="misc/spring-rabbit-demo-lisener.xml" />
     <!-- 如果不用kafka作为消息队列回调业务系统,注释下面kafka相关spring配置 -->
     <import resource="misc/spring-kafka.xml" />
+
+
     <bean id="contractAspect" class="com.wuswoo.easypay.service.aspect.ContractAspect"></bean>
 </beans>

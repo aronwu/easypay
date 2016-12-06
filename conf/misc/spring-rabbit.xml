@@ -9,6 +9,10 @@
 	http://www.springframework.org/schema/rabbit
 	http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd">
 
+
+	<bean id="rabbitmqCallbackTask" class="com.wuswoo.easypay.service.callback.impl.RabbitmqCallbackTask" scope="prototype">
+	</bean>
+
 	<!-- =========================== message queue =========================== -->
 	
 	<!-- misc vhost 连接工厂 -->

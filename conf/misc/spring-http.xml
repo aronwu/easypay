@@ -11,11 +11,4 @@
 
     <bean id="httpCallbackTask" class="com.wuswoo.easypay.service.callback.impl.HttpCallbackTask" scope="prototype">
     </bean>
-
-    <bean id="kafkaCallbackTask" class="com.wuswoo.easypay.service.callback.impl.KafkaCallbackTask" scope="prototype">
-    </bean>
-
-    <bean id="rabbitmqCallbackTask" class="com.wuswoo.easypay.service.callback.impl.RabbitmqCallbackTask" scope="prototype">
-    </bean>
-
 </beans>
