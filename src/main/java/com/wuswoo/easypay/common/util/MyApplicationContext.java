@@ -6,7 +6,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import java.io.File;
+import java.io.*;
+import java.util.Properties;
 
 /**
  * Created by wuxinjun on 16/9/2.
@@ -19,12 +20,22 @@ public class MyApplicationContext {
     private static ApplicationContext ctx;
     private static MyApplicationContext instance = null;
 
+    private static Properties properties;
+
     static
     {
-		/* 加载 log4j2 配置文件 */
+        /* 加载 log4j2 配置文件 */
         File file = new File("conf/log4j2.xml");
         System.out.println("log4j2 file location:" + file.getAbsolutePath());
         System.setProperty("log4j.configurationFile", file.getAbsolutePath());
+        /* load properties */
+        properties = new Properties();
+        try {
+            InputStream in = new BufferedInputStream(new FileInputStream(new File("conf/config.properties")));
+            properties.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static MyApplicationContext getInstance(){
@@ -38,6 +49,11 @@ public class MyApplicationContext {
 
         return instance;
     }
+
+    public static Properties getProperties() {
+        return properties;
+    }
+
 
     private MyApplicationContext() {
         initCtx();
