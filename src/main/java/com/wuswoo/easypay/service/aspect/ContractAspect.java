@@ -4,14 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.wuswoo.easypay.common.util.ReflectionUtil;
 import com.wuswoo.easypay.common.util.ValidationUtil;
 import com.wuswoo.easypay.http.server.Request;
+import com.wuswoo.easypay.service.exception.EasyPayException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.pattern.LiteralPatternConverter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,15 +44,21 @@ public class ContractAspect {
                     return joinPoint.proceed();
                 } else {
                     //throw validation errors exception
-                    //TODO
+                    List<String> errors = new ArrayList<String>();
+                    for(Map.Entry<String, List<String>> entry : validationResult.entrySet()) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(entry.getKey() + ":");
+                        for(String er : entry.getValue()) {
+                            sb.append(er + "\n");
+                        }
+                        errors.add(sb.toString());
+                    }
                     //格式化Exception内容
-                    throw new Exception();
+                    throw new EasyPayException("输入请求参数错误", EasyPayException.INPUT_CONTRACT_ERROR, errors);
                 }
             } else {
                 //throw no contract class value  exception
-                //TODO
-                //格式化Exception内容
-                throw new Exception();
+                throw new EasyPayException("输入协议错误", EasyPayException.INPUT_CONTRACT_ERROR);
             }
         } else {
             return joinPoint.proceed();

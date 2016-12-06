@@ -1,11 +1,16 @@
 package com.wuswoo.easypay.service.exception;
 
+import com.wuswoo.easypay.http.exception.HttpExceptionResponse;
+import com.wuswoo.easypay.http.exception.IExceptionToHttpResponse;
+
 import javax.print.DocFlavor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wuxinjun on 16/9/8.
  */
-public class EasyPayException extends RuntimeException {
+public class EasyPayException extends RuntimeException implements IExceptionToHttpResponse{
 
     private static final long serialVersionUID = 2L;
 
@@ -70,6 +75,8 @@ public class EasyPayException extends RuntimeException {
 
     private String code;
 
+    private List<String> errors = new ArrayList<String>();
+
     public EasyPayException() {
     }
 
@@ -80,6 +87,12 @@ public class EasyPayException extends RuntimeException {
     public EasyPayException(String message, String code) {
         super(message);
         setCode(code);
+    }
+
+    public EasyPayException(String message, String code, List<String> errors) {
+        super(message);
+        setCode(code);
+        setErrors(errors);
     }
 
     public EasyPayException(String message, Throwable cause) {
@@ -97,5 +110,22 @@ public class EasyPayException extends RuntimeException {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
+    }
+
+    @Override
+    public HttpExceptionResponse getHttpResponse() {
+        HttpExceptionResponse httpExceptionResponse = new HttpExceptionResponse();
+        httpExceptionResponse.setCode(this.getCode());
+        httpExceptionResponse.setMessage(this.getMessage());
+        httpExceptionResponse.setErrors(this.getErrors());
+        return httpExceptionResponse;
     }
 }

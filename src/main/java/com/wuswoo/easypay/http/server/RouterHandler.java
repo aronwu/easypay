@@ -1,11 +1,9 @@
 package com.wuswoo.easypay.http.server;
 
+import com.wuswoo.easypay.common.util.ExceptionUtil;
 import com.wuswoo.easypay.http.controller.IController;
 import com.wuswoo.easypay.http.controller.IControllerAdapter;
-import com.wuswoo.easypay.http.exception.HttpExceptionResponse;
-import com.wuswoo.easypay.http.exception.MissingMethodException;
-import com.wuswoo.easypay.http.exception.MissingParamException;
-import com.wuswoo.easypay.http.exception.MissingUriException;
+import com.wuswoo.easypay.http.exception.*;
 import com.wuswoo.easypay.http.router.RouteResult;
 import com.wuswoo.easypay.http.router.Router;
 import io.netty.channel.*;
@@ -121,6 +119,7 @@ public class RouterHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
             HttpExceptionResponse ex = new HttpExceptionResponse();
             ex.setCode(HttpResponseStatus.BAD_REQUEST.codeAsText().toString());
             ex.setMessage("Missing param: " + mp.param());
+            ex.addError(ExceptionUtil.convertExcepitonToString(e));
             response.respondJson(ex);
         } else if (e instanceof MissingUriException) {
             MissingUriException mp = (MissingUriException) e;
@@ -128,13 +127,21 @@ public class RouterHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
             HttpExceptionResponse ex = new HttpExceptionResponse();
             ex.setCode(HttpResponseStatus.BAD_REQUEST.codeAsText().toString());
             ex.setMessage("Missing uri: " + mp.uri());
+            ex.addError(ExceptionUtil.convertExcepitonToString(e));
+            response.respondJson(ex);
+        } else if (e instanceof IExceptionToHttpResponse) {
+            HttpExceptionResponse ex = ((IExceptionToHttpResponse)e).getHttpResponse();
+            response.setStatus(new HttpResponseStatus(Integer.parseInt(ex.getCode()), "Internal Server Error"));
             response.respondJson(ex);
         } else {
-            //TODO
             //统一格式化成HttpExceptionResponse输出
             logger.error("Server error: {}\nWhen processing request: {}", e, request);
+            HttpExceptionResponse ex = new HttpExceptionResponse();
             response.setStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
-            response.respondText("Internal Server Error");
+            ex.setCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.codeAsText().toString());
+            ex.setMessage("内部发生错误uri: " + request.getUri());
+            ex.addError(ExceptionUtil.convertExcepitonToString(e));
+            response.respondJson(ex);
         }
     }
 
