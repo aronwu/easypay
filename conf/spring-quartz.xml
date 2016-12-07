@@ -12,9 +12,11 @@
     <context:component-scan base-package="com.wuswoo.easypay.service.job" />
 
     <bean id="refundQueryResultJob" class="com.wuswoo.easypay.service.job.WechatRefundQueryResultJob"></bean>
+    <bean id="notifyScheduleCallbackJob" class="com.wuswoo.easypay.service.job.NotifyScheduleCallbackJob"></bean>
 
     <task:scheduled-tasks scheduler="easypayScheduler">
         <task:scheduled ref="refundQueryResultJob"  method="run" cron="${wechat.refundquery.schedule}" />
+        <task:scheduled ref="notifyScheduleCallbackJob"  method="run" cron="${easypay.callback.schedule}" />
     </task:scheduled-tasks>
     <task:scheduler id="easypayScheduler" pool-size="10"/>
 

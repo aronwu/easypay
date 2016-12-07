@@ -125,6 +125,7 @@ public class PayConstant {
     {
         public static final String PAYMENT = "payment.notify.payment";
         public static final String REFUND = "payment.notify.refund";
+
     }
 
 

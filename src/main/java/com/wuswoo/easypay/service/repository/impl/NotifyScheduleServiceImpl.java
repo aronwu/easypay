@@ -1,6 +1,7 @@
 package com.wuswoo.easypay.service.repository.impl;
 
 import com.wuswoo.easypay.service.mapper.NotifyScheduleMapper;
+import com.wuswoo.easypay.service.mapper.PaymentExtMapper;
 import com.wuswoo.easypay.service.model.NotifySchedule;
 import com.wuswoo.easypay.service.model.NotifyScheduleExample;
 import com.wuswoo.easypay.service.repository.INotifyScheduleService;
@@ -19,13 +20,22 @@ public class NotifyScheduleServiceImpl implements INotifyScheduleService {
 
     @Autowired
     private NotifyScheduleMapper notifyScheduleMapper;
+
+    @Autowired
+    private PaymentExtMapper paymentExtMapper;
     @Override
-    public List<NotifySchedule> getFailedNotifySchedules(Byte tradeType, Integer platformId) {
+    public List<NotifySchedule> getFailedNotifySchedulesByTradeTypeAndPlotformId(Byte tradeType, Integer platformId) {
         NotifyScheduleExample example = new NotifyScheduleExample();
         example.createCriteria().andNotifyStatusEqualTo(PayConstant.NotifyResultStatus.FAIL.byteValue())
             .andTradeTypeEqualTo(tradeType)
             .andPlatformIdEqualTo(platformId);
         List<NotifySchedule> notifySchedules = notifyScheduleMapper.selectByExample(example);
+        return notifySchedules;
+    }
+
+    @Override
+    public List<NotifySchedule> getFailedNotifySchedules(Byte maxNotifyCount, Integer limit) {
+        List<NotifySchedule> notifySchedules = paymentExtMapper.getFailedNotifySchedules(maxNotifyCount, limit);
         return notifySchedules;
     }
 

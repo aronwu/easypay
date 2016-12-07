@@ -15,7 +15,16 @@ public interface INotifyScheduleService {
      * @param platformId
      * @return
      */
-    public List<NotifySchedule> getFailedNotifySchedules(Byte tradeType, Integer platformId);
+    public List<NotifySchedule> getFailedNotifySchedulesByTradeTypeAndPlotformId(Byte tradeType, Integer platformId);
+
+    /**
+     * 获取通知业务系统回调失败
+     * @param maxNotifyCount
+     * @param limit
+     * @return
+     */
+    public List<NotifySchedule> getFailedNotifySchedules(Byte maxNotifyCount, Integer limit);
+
 
     /**
      * 获取通知
