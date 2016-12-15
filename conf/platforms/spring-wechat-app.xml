@@ -11,53 +11,51 @@
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context-4.1.xsd">
 
-    <bean id="wechatWapPaymentRequest" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatPaymentWapRequest">
+    <bean id="wechatAppPaymentRequest" class="com.wuswoo.easypay.service.platform.wechat_app.WechatPaymentAppRequest">
         <property name="queryParams">
             <map>
-                <entry key="appid" value="${wechat.wap.appid}" />
-                <entry key="mch_id" value="${wechat.wap.mch_id}" />
-                <entry key="trade_type" value="${wechat.wap.trade_type}" />
+                <entry key="appid" value="${wechat.app.appid}" />
+                <entry key="mch_id" value="${wechat.app.mch_id}" />
+                <entry key="trade_type" value="${wechat.app.trade_type}" />
                 <entry key="fee_type" value="${wechat.fee_type}" />
                 <entry key="notify_url" value="${easypay.pay.notifyUrl}1" />
-                <entry key="paterner_key" value="${wechat.wap.paterner_key}" />
-                <entry key="sign_type" value="${wechat.wap.pay_sign_type}" />
+                <entry key="paterner_key" value="${wechat.app.paterner_key}" />
             </map>
         </property>
     </bean>
 
 
-    <bean id="wechatWapRefundRequest" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatRefundWapRequest">
+    <bean id="wechatAppRefundRequest" class="com.wuswoo.easypay.service.platform.wechat_app.WechatRefundAppRequest">
         <property name="queryParams">
             <map>
-                <entry key="appid" value="${wechat.wap.appid}" />
-                <entry key="mch_id" value="${wechat.wap.mch_id}" />
-                <entry key="op_user_id" value="${wechat.wap.mch_id}" />
-                <entry key="paterner_key" value="${wechat.wap.paterner_key}" />
+                <entry key="appid" value="${wechat.app.appid}" />
+                <entry key="mch_id" value="${wechat.app.mch_id}" />
+                <entry key="op_user_id" value="${wechat.app.mch_id}" />
+                <entry key="paterner_key" value="${wechat.app.paterner_key}" />
             </map>
         </property>
     </bean>
 
-    <bean id="wechatWapResultQueryRequest" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatResultQueryWapRequest">
+    <bean id="wechatAppResultQueryRequest" class="com.wuswoo.easypay.service.platform.wechat_app.WechatResultQueryAppRequest">
         <property name="queryParams">
             <map>
-                <entry key="appid" value="${wechat.wap.appid}" />
-                <entry key="mch_id" value="${wechat.wap.mch_id}" />
-                <entry key="op_user_id" value="${wechat.wap.mch_id}" />
-                <entry key="paterner_key" value="${wechat.wap.paterner_key}" />
+                <entry key="appid" value="${wechat.app.appid}" />
+                <entry key="mch_id" value="${wechat.app.mch_id}" />
+                <entry key="paterner_key" value="${wechat.app.paterner_key}" />
             </map>
         </property>
     </bean>
 
-    <bean id="paymentService1" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatWapPaymentServiceImpl" >
-        <constructor-arg name="paymentRequest" ref="wechatWapPaymentRequest" />
+    <bean id="paymentService2" class="com.wuswoo.easypay.service.platform.wechat_app.WechatAppPaymentServiceImpl" >
+        <constructor-arg name="paymentRequest" ref="wechatAppPaymentRequest" />
     </bean>
 
-    <bean id="queryService1" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatWapResultQueryServiceImpl" >
-        <constructor-arg name="resultQueryRequest" ref="wechatWapResultQueryRequest" />
+    <bean id="queryService2" class="com.wuswoo.easypay.service.platform.wechat_app.WechatAppResultQueryServiceImpl" >
+        <constructor-arg name="resultQueryRequest" ref="wechatAppResultQueryRequest" />
     </bean>
 
-    <bean id="refundService1" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatWapRefundServiceImpl" >
-        <constructor-arg name="refundRequest" ref="wechatWapRefundRequest" />
+    <bean id="refundService2" class="com.wuswoo.easypay.service.platform.wechat_app.WechatAppRefundServiceImpl" >
+        <constructor-arg name="refundRequest" ref="wechatAppRefundRequest" />
     </bean>
 
 </beans>

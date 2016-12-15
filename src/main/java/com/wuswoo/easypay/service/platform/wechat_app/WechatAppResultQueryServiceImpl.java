@@ -1,4 +1,4 @@
-package com.wuswoo.easypay.service.platform.wechat_wap;
+package com.wuswoo.easypay.service.platform.wechat_app;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -42,8 +42,8 @@ import java.util.Map;
 /**
  * Created by wuxinjun on 16/11/28.
  */
-public class WechatWapResultQueryServiceImpl implements IResultQueryService {
-    private final static Logger logger = LogManager.getLogger(WechatWapResultQueryServiceImpl.class);
+public class WechatAppResultQueryServiceImpl implements IResultQueryService {
+    private final static Logger logger = LogManager.getLogger(WechatAppResultQueryServiceImpl.class);
 
     protected  static final String MCH_API_URI = "https://api.mch.weixin.qq.com";
     private BaseRequest request;
@@ -57,7 +57,7 @@ public class WechatWapResultQueryServiceImpl implements IResultQueryService {
     @Autowired
     private IPaymentService paymentService;
 
-    public WechatWapResultQueryServiceImpl(BaseRequest resultQueryRequest) {
+    public WechatAppResultQueryServiceImpl(BaseRequest resultQueryRequest) {
         this.request = resultQueryRequest;
     }
 
