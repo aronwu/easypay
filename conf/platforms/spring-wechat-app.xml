@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+    <bean id="wechatWapPaymentRequest" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatPaymentWapRequest">
+        <property name="queryParams">
+            <map>
+                <entry key="appid" value="${wechat.wap.appid}" />
+                <entry key="mch_id" value="${wechat.wap.mch_id}" />
+                <entry key="trade_type" value="${wechat.wap.trade_type}" />
+                <entry key="fee_type" value="${wechat.fee_type}" />
+                <entry key="notify_url" value="${easypay.pay.notifyUrl}1" />
+                <entry key="paterner_key" value="${wechat.wap.paterner_key}" />
+                <entry key="sign_type" value="${wechat.wap.pay_sign_type}" />
+            </map>
+        </property>
+    </bean>
+
+
+    <bean id="wechatWapRefundRequest" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatRefundWapRequest">
+        <property name="queryParams">
+            <map>
+                <entry key="appid" value="${wechat.wap.appid}" />
+                <entry key="mch_id" value="${wechat.wap.mch_id}" />
+                <entry key="op_user_id" value="${wechat.wap.mch_id}" />
+                <entry key="paterner_key" value="${wechat.wap.paterner_key}" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="wechatWapResultQueryRequest" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatResultQueryWapRequest">
+        <property name="queryParams">
+            <map>
+                <entry key="appid" value="${wechat.wap.appid}" />
+                <entry key="mch_id" value="${wechat.wap.mch_id}" />
+                <entry key="op_user_id" value="${wechat.wap.mch_id}" />
+                <entry key="paterner_key" value="${wechat.wap.paterner_key}" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="paymentService1" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatWapPaymentServiceImpl" >
+        <constructor-arg name="paymentRequest" ref="wechatWapPaymentRequest" />
+    </bean>
+
+    <bean id="queryService1" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatWapResultQueryServiceImpl" >
+        <constructor-arg name="resultQueryRequest" ref="wechatWapResultQueryRequest" />
+    </bean>
+
+    <bean id="refundService1" class="com.wuswoo.easypay.service.platform.wechat_wap.WechatWapRefundServiceImpl" >
+        <constructor-arg name="refundRequest" ref="wechatWapRefundRequest" />
+    </bean>
+
+</beans>

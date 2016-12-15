@@ -59,7 +59,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-mainClassName = "com.wuswoo.easypay.main.EasypaymentApp"
+mainClassName = "com.wuswoo.easypay.main.EasyPaymentApp"
 
 sourceSets {
     main {
