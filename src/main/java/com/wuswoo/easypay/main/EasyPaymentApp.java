@@ -103,7 +103,10 @@ public class EasyPaymentApp extends BaseNioServer {
             .GET("/api/payments/:paymentCode", "paymentController@getPayment")
             .GET("/api/refunds/:paymentCode", "paymentController@getRefund")
             .POST("/notify/payments/:platformId/:paymentCode", "notifyController@notifyPayment")
-            .POST("/notify/refunds/:platformId/:paymentCode", "notifyController@notifyRefund");
+            .POST("/notify/payments/:platformId", "notifyController@notifyPayment")
+            .POST("/notify/refunds/:platformId/:paymentCode", "notifyController@notifyRefund")
+            .POST("/notify/refunds/:platformId", "notifyController@notifyRefund")
+            .GET("/status/ok", "statusController@ok");
 
     }
 

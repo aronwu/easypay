@@ -34,10 +34,14 @@ public class PayConstant {
     /** 支付平台类型 */
     public static class PlatformType
     {
+        //微信支付
         public static final PayConstant WEIXINWAP		= new PayConstant(1, "微信WAP支付");
         public static final PayConstant WEIXINAPP		= new PayConstant(2, "微信APP支付");
-        public static final PayConstant ALIPAYAPP		= new PayConstant(3, "支付宝APP支付");
-        public static final PayConstant ALIPAYWAP		= new PayConstant(4, "支付宝WAP支付");
+        public static final PayConstant WEIXINNATIVE		= new PayConstant(3, "微信原生扫码支付");
+
+        //支付支付
+        public static final PayConstant ALIPAYAPP		= new PayConstant(7, "支付宝APP支付");
+        public static final PayConstant ALIPAYWAP		= new PayConstant(8, "支付宝WAP支付");
     }
 
     /** 支付状态类型 */
