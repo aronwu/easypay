@@ -43,9 +43,9 @@ import java.util.Map;
  * Created by wuxinjun on 16/11/28.
  */
 public class WechatAppResultQueryServiceImpl implements IResultQueryService {
-    private final static Logger logger = LogManager.getLogger(WechatAppResultQueryServiceImpl.class);
-
-    protected  static final String MCH_API_URI = "https://api.mch.weixin.qq.com";
+    protected static final String MCH_API_URI = "https://api.mch.weixin.qq.com";
+    private final static Logger logger =
+        LogManager.getLogger(WechatAppResultQueryServiceImpl.class);
     private BaseRequest request;
 
     @Autowired
@@ -68,10 +68,12 @@ public class WechatAppResultQueryServiceImpl implements IResultQueryService {
         mchOrderquery.setMch_id(this.request.getQueryParam("mch_id"));
         mchOrderquery.setNonce_str(RandomStringUtils.randomStringByLength(30));
         mchOrderquery.setOut_trade_no(payment.getPaymentCode());
-        MchOrderInfoResult mchOrderInfoResult = PayMchAPI.payOrderquery(mchOrderquery, this.request.getQueryParam("paterner_key"));
-        PaymentResult  paymentResult = new PaymentResult();
+        MchOrderInfoResult mchOrderInfoResult =
+            PayMchAPI.payOrderquery(mchOrderquery, this.request.getQueryParam("paterner_key"));
+        PaymentResult paymentResult = new PaymentResult();
         if ("SUCCESS".equalsIgnoreCase(mchOrderInfoResult.getReturn_code())) {
-            if (!WechatAppUtil.validateMchOrderInfoResultSign(mchOrderInfoResult, this.request.getQueryParam("paterner_key"))) {
+            if (!WechatAppUtil.validateMchOrderInfoResultSign(mchOrderInfoResult,
+                this.request.getQueryParam("paterner_key"))) {
                 //验证失败
                 logger.error("微信支付回调签名验证失败:{0}", mchOrderInfoResult.getSign());
                 throw new EasyPayException("微信支付回调签名验证失败", EasyPayException.WECHAT_SIGN_INVALIDATE);
@@ -81,21 +83,25 @@ public class WechatAppResultQueryServiceImpl implements IResultQueryService {
                 paymentResult.setCreatedTime(current);
                 paymentResult.setUpdatedTime(current);
                 paymentResult.setPlatformId(payment.getPlatformId());
-                paymentResult.setPayAmount(mchOrderInfoResult.getTotal_fee() == null ? 0:mchOrderInfoResult.getTotal_fee().intValue());
-                paymentResult.setPaymentTime(DateTimeUtil.parseStringTo99BillDateTime(mchOrderInfoResult.getTime_end()));
+                paymentResult.setPayAmount(mchOrderInfoResult.getTotal_fee() == null ?
+                    0 :
+                    mchOrderInfoResult.getTotal_fee().intValue());
+                paymentResult.setPaymentTime(
+                    DateTimeUtil.parseStringTo99BillDateTime(mchOrderInfoResult.getTime_end()));
                 paymentResult.setTradeNo(mchOrderInfoResult.getTransaction_id());
                 paymentResult.setPaymentCode(mchOrderInfoResult.getOut_trade_no());
                 try {
                     paymentResult.setReturnContent(XMLConverUtil.convertToXML(mchOrderInfoResult));
-                }catch(Exception ex) {
+                } catch (Exception ex) {
                     paymentResult.setReturnContent(JSONObject.toJSONString(mchOrderInfoResult));
                 }
                 paymentResult.setPlatformReturnCode(mchOrderInfoResult.getResult_code());
-                paymentResult.setStatus(WechatStatusUtil.parsePaymentStatus(mchOrderInfoResult.getTrade_state()));
+                paymentResult.setStatus(
+                    WechatStatusUtil.parsePaymentStatus(mchOrderInfoResult.getTrade_state()));
             }
         } else {
-            logger.error(String.format("微信支付查询失败code:%s,msg:%s", mchOrderInfoResult.getErr_code()
-                ,mchOrderInfoResult.getErr_code_des()));
+            logger.error(String.format("微信支付查询失败code:%s,msg:%s", mchOrderInfoResult.getErr_code(),
+                mchOrderInfoResult.getErr_code_des()));
             throw new EasyPayException("微信支付查询失败");
         }
         return paymentResult;
@@ -104,21 +110,23 @@ public class WechatAppResultQueryServiceImpl implements IResultQueryService {
     @Override
     public RefundResult queryRefund(RefundResult refundResult) {
         logger.info("RefundQuery request info : {}", JSON.toJSONString(refundResult));
-        Refundquery  refundquery = new Refundquery();
-        List<RefundResult>  refundResults = new ArrayList<RefundResult>();
-        Refund  refund = refundDBService.getRefundById(refundResult.getRefundId());
+        Refundquery refundquery = new Refundquery();
+        List<RefundResult> refundResults = new ArrayList<RefundResult>();
+        Refund refund = refundDBService.getRefundById(refundResult.getRefundId());
         refundquery.setAppid(this.request.getQueryParam("appid"));
         refundquery.setMch_id(this.request.getQueryParam("mch_id"));
         refundquery.setNonce_str(RandomStringUtils.randomStringByLength(30));
         refundquery.setRefund_id(refundResult.getTradeNo());
-        PayRefundQueryLoc result = queryRefundQueryClient(refundquery, this.request.getQueryParam("paterner_key"));
+        PayRefundQueryLoc result =
+            queryRefundQueryClient(refundquery, this.request.getQueryParam("paterner_key"));
         logger.info("RefundQuery result info: {}", result);
-        ResultQuery resultQuery = resultQueryDBService.findResultQuerybyPlatformTradeTypeId(
-            PayConstant.PlatformType.WEIXINWAP.intValue(),
-            PayConstant.PaymentResultType.REFUND.byteValue(), refundResult.getId());
+        ResultQuery resultQuery = resultQueryDBService
+            .findResultQuerybyPlatformTradeTypeId(PayConstant.PlatformType.WEIXINWAP.intValue(),
+                PayConstant.PaymentResultType.REFUND.byteValue(), refundResult.getId());
         if ("SUCCESS".equalsIgnoreCase(result.getReturn_code())) {
             if ("SUCCESS".equalsIgnoreCase(result.getResult_code())) {
-                Byte newRefundStatus = WechatStatusUtil.parseRefundStatus(result.getRefund_status_0());
+                Byte newRefundStatus =
+                    WechatStatusUtil.parseRefundStatus(result.getRefund_status_0());
                 Byte originRefundStatus = refundResult.getStatus();
                 resultQuery.setQueryStatus(newRefundStatus);
                 resultQuery.setReturnContent(JSONObject.toJSONString(result));
@@ -131,7 +139,7 @@ public class WechatAppResultQueryServiceImpl implements IResultQueryService {
                 refundResult.setStatus(newRefundStatus);
                 try {
                     refundResult.setReturnContent(XMLConverUtil.convertToXML(result));
-                }catch(Exception ex) {
+                } catch (Exception ex) {
                     refundResult.setReturnContent(JSONObject.toJSONString(result));
                 }
                 refundResults.add(refundResult);
@@ -143,8 +151,8 @@ public class WechatAppResultQueryServiceImpl implements IResultQueryService {
         } else {
             //重新发起退款查询
             resultQueryDBService.nextQuery(resultQuery);
-            logger.error(String.format("微信退款查询失败code:%s 错误内容:%s", result.getErr_code()
-                ,result.getErr_code_des()));
+            logger.error(String
+                .format("微信退款查询失败code:%s 错误内容:%s", result.getErr_code(), result.getErr_code_des()));
             throw new EasyPayException("微信退款查询失败");
         }
         return refundResult;
@@ -156,11 +164,10 @@ public class WechatAppResultQueryServiceImpl implements IResultQueryService {
         String sign = SignatureUtil.generateSign(map, key);
         refundquery.setSign(sign);
         String refundqueryXml = XMLConverUtil.convertToXML(refundquery);
-        HttpUriRequest httpUriRequest = RequestBuilder.post()
-            .setHeader(new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_XML.toString()))
+        HttpUriRequest httpUriRequest = RequestBuilder.post().setHeader(
+            new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_XML.toString()))
             .setUri(MCH_API_URI)
-            .setEntity(new StringEntity(refundqueryXml, Charset.forName("utf-8")))
-            .build();
+            .setEntity(new StringEntity(refundqueryXml, Charset.forName("utf-8"))).build();
         return LocalHttpClient.executeXmlResult(httpUriRequest, PayRefundQueryLoc.class);
 
     }

@@ -2,7 +2,6 @@ package com.wuswoo.easypay.service.controller.impl;
 
 import com.wuswoo.easypay.http.server.Request;
 import com.wuswoo.easypay.http.server.Response;
-import com.wuswoo.easypay.service.aspect.Contract;
 import com.wuswoo.easypay.service.controller.IStatusController;
 import org.springframework.stereotype.Controller;
 

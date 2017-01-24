@@ -15,7 +15,6 @@
  */
 package com.wuswoo.easypay.http.router;
 
-import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.internal.ObjectUtil;
 import io.netty.util.internal.StringUtil;
 import io.netty.util.internal.logging.InternalLogger;
@@ -23,19 +22,15 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Router that doesn't contain information about HTTP request methods and route
  * matching orders.
  */
 final class OrderlessRouter<T> {
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(OrderlessRouter.class);
+    private static final InternalLogger log =
+        InternalLoggerFactory.getInstance(OrderlessRouter.class);
 
     // A path can only point to one target
     private final Map<Path, T> routes = new HashMap<Path, T>();
@@ -45,7 +40,9 @@ final class OrderlessRouter<T> {
 
     //--------------------------------------------------------------------------
 
-    /** Returns all routes in this router, an unmodifiable map of {@code Path -> Target}. */
+    /**
+     * Returns all routes in this router, an unmodifiable map of {@code Path -> Target}.
+     */
     public Map<Path, T> routes() {
         return Collections.unmodifiableMap(routes);
     }
@@ -78,10 +75,12 @@ final class OrderlessRouter<T> {
 
     //--------------------------------------------------------------------------
 
-    /** Removes the route specified by the path. */
+    /**
+     * Removes the route specified by the path.
+     */
     public void removePath(String path) {
-        Path p      = new Path(path);
-        T    target = routes.remove(p);
+        Path p = new Path(path);
+        T target = routes.remove(p);
         if (target == null) {
             return;
         }
@@ -90,7 +89,9 @@ final class OrderlessRouter<T> {
         paths.remove(p);
     }
 
-    /** Removes all routes leading to the target. */
+    /**
+     * Removes all routes leading to the target.
+     */
     public void removeTarget(T target) {
         Set<Path> paths = reverseRoutes.remove(ObjectUtil.checkNotNull(target, "target"));
         if (paths == null) {
@@ -107,12 +108,16 @@ final class OrderlessRouter<T> {
 
     //--------------------------------------------------------------------------
 
-    /** @return {@code null} if no match; note: {@code queryParams} is not set in {@link RouteResult} */
+    /**
+     * @return {@code null} if no match; note: {@code queryParams} is not set in {@link RouteResult}
+     */
     public RouteResult<T> route(String path) {
         return route(StringUtil.split(Path.removeSlashesAtBothEnds(path), '/'));
     }
 
-    /** @return {@code null} if no match; note: {@code queryParams} is not set in {@link RouteResult} */
+    /**
+     * @return {@code null} if no match; note: {@code queryParams} is not set in {@link RouteResult}
+     */
     public RouteResult<T> route(String[] requestPathTokens) {
         // Optimization note:
         // - Reuse tokens and pathParams in the loop
@@ -132,7 +137,9 @@ final class OrderlessRouter<T> {
         return null;
     }
 
-    /** Checks if there's any matching route. */
+    /**
+     * Checks if there's any matching route.
+     */
     public boolean anyMatched(String[] requestPathTokens) {
         Map<String, String> pathParams = new HashMap<String, String>();
         for (Path path : routes.keySet()) {
@@ -152,7 +159,7 @@ final class OrderlessRouter<T> {
     /**
      * Given a target and params, this method tries to do the reverse routing
      * and returns the path.
-     *
+     * <p/>
      * The params are put to placeholders in the path.
      * The params can be a map of {@code placeholder name -> value}
      * or ordered values. If a param doesn't have a placeholder, it will be put
@@ -171,19 +178,22 @@ final class OrderlessRouter<T> {
         }
 
         if (params.length % 2 == 1) {
-            throw new IllegalArgumentException("Missing value for param: " + params[params.length - 1]);
+            throw new IllegalArgumentException(
+                "Missing value for param: " + params[params.length - 1]);
         }
 
         Map<Object, Object> map = new HashMap<Object, Object>(params.length / 2);
         for (int i = 0; i < params.length; i += 2) {
-            String key   = params[i].toString();
+            String key = params[i].toString();
             String value = params[i + 1].toString();
             map.put(key, value);
         }
         return pathMap(target, map);
     }
 
-    /** @return {@code null} if there's no match, or the params can't be UTF-8 encoded */
+    /**
+     * @return {@code null} if there's no match, or the params can't be UTF-8 encoded
+     */
     private String pathMap(T target, Map<Object, Object> params) {
         Set<Path> paths = reverseRoutes.get(target);
         if (paths == null) {
@@ -192,10 +202,10 @@ final class OrderlessRouter<T> {
 
         try {
             // The best one is the one with minimum number of params in the query
-            String bestCandidate  = null;
-            int    minQueryParams = Integer.MAX_VALUE;
+            String bestCandidate = null;
+            int minQueryParams = Integer.MAX_VALUE;
 
-            boolean     matched  = true;
+            boolean matched = true;
             Set<String> usedKeys = new HashSet<String>();
 
             for (Path path : paths) {
@@ -203,14 +213,14 @@ final class OrderlessRouter<T> {
                 usedKeys.clear();
 
                 // "+ 16": Just in case the part befor that is 0
-                int           initialCapacity = path.path().length() + 20 * params.size() + 16;
-                StringBuilder b               = new StringBuilder(initialCapacity);
+                int initialCapacity = path.path().length() + 20 * params.size() + 16;
+                StringBuilder b = new StringBuilder(initialCapacity);
 
                 for (String token : path.tokens()) {
                     b.append('/');
 
                     if (token.length() > 0 && token.charAt(0) == ':') {
-                        String key   = token.substring(1);
+                        String key = token.substring(1);
                         Object value = params.get(key);
                         if (value == null) {
                             matched = false;
@@ -253,7 +263,7 @@ final class OrderlessRouter<T> {
                             }
                         }
 
-                        bestCandidate  = b.toString();
+                        bestCandidate = b.toString();
                         minQueryParams = numQueryParams;
                     }
                 }

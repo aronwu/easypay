@@ -7,6 +7,7 @@ public interface IControllerAdapter {
 
     /**
      * 根据beanid 获取对应controller实例
+     *
      * @param beanId
      * @return
      */

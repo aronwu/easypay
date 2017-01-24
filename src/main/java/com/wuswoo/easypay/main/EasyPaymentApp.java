@@ -10,11 +10,9 @@ import io.netty.channel.socket.SocketChannel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Property;
 import weixin.popular.client.LocalHttpClient;
 
 import java.io.File;
-import java.util.Properties;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -26,29 +24,42 @@ public class EasyPaymentApp extends BaseNioServer {
 
     private static int port = 12001;
 
-    static
-    {
+    static {
         //根据配置文件来设置
         /** 加载 微信APP证书 */
-        String wechatAppMchId = MyApplicationContext.getProperties().getProperty("wechat.app.mch_id");
-        if (!StringUtils.isBlank(wechatAppMchId)){
+        String wechatAppMchId =
+            MyApplicationContext.getProperties().getProperty("wechat.app.mch_id");
+        if (!StringUtils.isBlank(wechatAppMchId)) {
             File wechatAppCertLocation = new File("conf/certs/weixin_app_cert/apiclient_cert.p12");
-            LocalHttpClient.initMchKeyStore(wechatAppMchId, wechatAppCertLocation.getAbsolutePath());
+            LocalHttpClient
+                .initMchKeyStore(wechatAppMchId, wechatAppCertLocation.getAbsolutePath());
         }
 
         /** 加载 微信WAP证书 */
-        String wechatWapMchId = MyApplicationContext.getProperties().getProperty("wechat.wap.mch_id");
-        if (!StringUtils.isBlank(wechatWapMchId)){
+        String wechatWapMchId =
+            MyApplicationContext.getProperties().getProperty("wechat.wap.mch_id");
+        if (!StringUtils.isBlank(wechatWapMchId)) {
             File wechatWapCertLocation = new File("conf/certs/weixin_wap_cert/apiclient_cert.p12");
-            LocalHttpClient.initMchKeyStore(wechatWapMchId, wechatWapCertLocation.getAbsolutePath());
+            LocalHttpClient
+                .initMchKeyStore(wechatWapMchId, wechatWapCertLocation.getAbsolutePath());
         }
 
         if (MyApplicationContext.getProperties().getProperty("server.port") != null)
-            port = Integer.parseInt(MyApplicationContext.getProperties().getProperty("server.port"));
+            port =
+                Integer.parseInt(MyApplicationContext.getProperties().getProperty("server.port"));
         //		checkHttpProxy();
     }
 
     public EasyPaymentApp() {
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println("user.dir:" + System.getProperty("user.dir"));
+        MyApplicationContext.getInstance();
+        EasyPaymentApp paymentService = new EasyPaymentApp();
+        paymentService.init();
+        paymentService.start();
+        Runtime.getRuntime().addShutdownHook(new ShutdownThread(paymentService));
     }
 
     @Override
@@ -97,8 +108,7 @@ public class EasyPaymentApp extends BaseNioServer {
 
     protected void initHttpRouters() {
         //初始化路由
-        RouterHandler.getRouter()
-            .POST("/api/payments", "paymentController@postPayment")
+        RouterHandler.getRouter().POST("/api/payments", "paymentController@postPayment")
             .POST("/api/refunds", "paymentController@postRefund")
             .GET("/api/payments/:paymentCode", "paymentController@getPayment")
             .GET("/api/refunds/:paymentCode", "paymentController@getRefund")
@@ -110,16 +120,8 @@ public class EasyPaymentApp extends BaseNioServer {
 
     }
 
-    public static void main(String[] args) throws Exception {
-        System.out.println("user.dir:" + System.getProperty("user.dir"));
-        MyApplicationContext.getInstance();
-        EasyPaymentApp paymentService = new EasyPaymentApp();
-        paymentService.init();
-        paymentService.start();
-        Runtime.getRuntime().addShutdownHook(new ShutdownThread(paymentService));
-    }
 
-    private class PaymentControllerAdapter implements IControllerAdapter {
+    static class PaymentControllerAdapter implements IControllerAdapter {
         @Override
         public IController getControllerByBeanId(String beanId) {
             return (IController) MyApplicationContext.getInstance().getBean(beanId);

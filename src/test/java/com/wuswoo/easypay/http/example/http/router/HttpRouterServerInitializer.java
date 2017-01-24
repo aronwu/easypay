@@ -23,7 +23,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 
 public class HttpRouterServerInitializer extends ChannelInitializer<SocketChannel> {
     private final HttpRouterServerHandler handler;
-    private final BadClientSilencer       badClientSilencer = new BadClientSilencer();
+    private final BadClientSilencer badClientSilencer = new BadClientSilencer();
 
     public HttpRouterServerInitializer(Router<String> router) {
         handler = new HttpRouterServerHandler(router);
@@ -31,9 +31,6 @@ public class HttpRouterServerInitializer extends ChannelInitializer<SocketChanne
 
     @Override
     public void initChannel(SocketChannel ch) {
-        ch.pipeline()
-          .addLast(new HttpServerCodec())
-          .addLast(handler)
-          .addLast(badClientSilencer);
+        ch.pipeline().addLast(new HttpServerCodec()).addLast(handler).addLast(badClientSilencer);
     }
 }

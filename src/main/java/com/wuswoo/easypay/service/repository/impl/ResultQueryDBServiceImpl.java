@@ -20,10 +20,11 @@ import java.util.List;
 public class ResultQueryDBServiceImpl implements IResultQueryDBService {
     @Autowired
     private ResultQueryMapper resultQueryMapper;
+
     @Override
     public ResultQuery saveResultQuery(ResultQuery resultQuery) {
         Date current = new Date();
-        if (resultQuery.getId() == null){
+        if (resultQuery.getId() == null) {
             resultQuery.setCreatedTime(current);
             resultQuery.setUpdatedTime(current);
             resultQueryMapper.insertSelective(resultQuery);
@@ -43,7 +44,7 @@ public class ResultQueryDBServiceImpl implements IResultQueryDBService {
     @Override
     public void nextQuery(ResultQuery resultQuery) {
         resultQuery.setNextQueryTime(getNextQueryTime(resultQuery.getQueryCount()));
-        resultQuery.setQueryCount((byte)(resultQuery.getQueryCount() + 1));
+        resultQuery.setQueryCount((byte) (resultQuery.getQueryCount() + 1));
         if (resultQuery.getQueryCount() > PayConstant.ResultQuery.MAX_QUERY) {
             resultQuery.setQueryStatus(PayConstant.ResultQueryType.FAIL.byteValue());
         }
@@ -55,10 +56,9 @@ public class ResultQueryDBServiceImpl implements IResultQueryDBService {
         Long tradeId) {
         ResultQueryExample resultQueryExample = new ResultQueryExample();
         resultQueryExample.createCriteria().andPlatformIdEqualTo(platformId)
-            .andTradeTypeEqualTo(tradeType)
-            .andTradeIdEqualTo(tradeId);
+            .andTradeTypeEqualTo(tradeType).andTradeIdEqualTo(tradeId);
         List<ResultQuery> resultQueries = resultQueryMapper.selectByExample(resultQueryExample);
-        return resultQueries != null && resultQueries.size() >0 ? resultQueries.get(0) : null;
+        return resultQueries != null && resultQueries.size() > 0 ? resultQueries.get(0) : null;
 
     }
 
@@ -68,18 +68,18 @@ public class ResultQueryDBServiceImpl implements IResultQueryDBService {
         resultQuery.setPlatformId(platformId);
         resultQuery.setTradeType(tradeType);
         resultQuery.setTradeId(tradeId);
-        resultQuery.setQueryCount((byte)0);
+        resultQuery.setQueryCount((byte) 0);
         resultQuery.setNextQueryTime(getNextQueryTime(resultQuery.getQueryCount()));
         return saveResultQuery(resultQuery);
     }
 
     @Override
-    public List<ResultQuery> getPendingResultQueries(Integer platformId, Byte tradeType, Long startTime) {
+    public List<ResultQuery> getPendingResultQueries(Integer platformId, Byte tradeType,
+        Long startTime) {
         int currentTime = DateTimeUtil.currentTime();
         ResultQueryExample resultQueryExample = new ResultQueryExample();
         resultQueryExample.createCriteria().andPlatformIdEqualTo(platformId)
-            .andNextQueryTimeLessThan(currentTime)
-            .andCreatedTimeGreaterThan(new Date(startTime))
+            .andNextQueryTimeLessThan(currentTime).andCreatedTimeGreaterThan(new Date(startTime))
             .andQueryStatusEqualTo(PayConstant.ResultQueryType.PENDING.byteValue())
             .andQueryCountLessThan(PayConstant.ResultQuery.MAX_QUERY)
             .andTradeTypeEqualTo(tradeType);
@@ -89,7 +89,7 @@ public class ResultQueryDBServiceImpl implements IResultQueryDBService {
 
     private int getNextQueryTime(int queryNum) {
         int minutes = 5;
-        switch(queryNum) {
+        switch (queryNum) {
             case 0:
                 minutes = 1;
                 break;
@@ -114,7 +114,8 @@ public class ResultQueryDBServiceImpl implements IResultQueryDBService {
             default:
                 minutes = 240;
         }
-        return new Long(DateTimeUtil.addForNow(Calendar.MINUTE, minutes).getTime()/1000).intValue();
+        return new Long(DateTimeUtil.addForNow(Calendar.MINUTE, minutes).getTime() / 1000)
+            .intValue();
 
     }
 }

@@ -13,6 +13,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 public class HttpPipelineInitializer extends ChannelInitializer<SocketChannel> {
 
     private RouterHandler routerHandler;
+
     public HttpPipelineInitializer(RouterHandler routerHandler) {
         this.routerHandler = routerHandler;
     }

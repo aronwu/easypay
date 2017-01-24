@@ -10,9 +10,9 @@ import java.util.Map;
  * Created by wuxinjun on 16/9/23.
  */
 public abstract class BaseRequest {
+    protected ISignature signature;
     private Map<String, String> queryParams;
     private String url;
-    protected ISignature signature;
 
     public BaseRequest() {
         this.queryParams = new HashMap<String, String>();

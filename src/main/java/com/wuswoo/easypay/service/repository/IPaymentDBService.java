@@ -14,6 +14,7 @@ public interface IPaymentDBService {
 
     /**
      * 添加支付
+     *
      * @param payment
      * @throws EasyPayException
      */
@@ -21,6 +22,7 @@ public interface IPaymentDBService {
 
     /**
      * 更新支付
+     *
      * @param payment
      * @throws EasyPayException
      */
@@ -28,6 +30,7 @@ public interface IPaymentDBService {
 
     /**
      * 根据支付id获取支付
+     *
      * @param paymentId
      * @return
      * @throws EasyPayException
@@ -36,6 +39,7 @@ public interface IPaymentDBService {
 
     /**
      * 根据支付编号获取支付
+     *
      * @param paymentCode
      * @return
      * @throws EasyPayException
@@ -44,6 +48,7 @@ public interface IPaymentDBService {
 
     /**
      * 根据支付编号获取支付结果
+     *
      * @param paymentCode
      * @return
      * @throws EasyPayException
@@ -52,6 +57,7 @@ public interface IPaymentDBService {
 
     /**
      * 保存支付结果
+     *
      * @param paymentResult
      * @return
      * @throws EasyPayException
@@ -61,15 +67,18 @@ public interface IPaymentDBService {
 
     /**
      * 根据一组支付编号获取相对应支付结果
+     *
      * @param paymentCodes
      * @param status
      * @return
      * @throws EasyPayException
      */
-    public List<PaymentResult> getPaymentResultsByPaymentCodes(List<String> paymentCodes, Byte status) throws EasyPayException;
+    public List<PaymentResult> getPaymentResultsByPaymentCodes(List<String> paymentCodes,
+        Byte status) throws EasyPayException;
 
     /**
      * 获取一组待支付记录
+     *
      * @param times
      * @return
      */
@@ -77,6 +86,7 @@ public interface IPaymentDBService {
 
     /**
      * 保存Notify
+     *
      * @param notifyFailedLog
      * @throws EasyPayException
      */

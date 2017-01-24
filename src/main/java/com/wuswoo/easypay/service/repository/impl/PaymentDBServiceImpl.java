@@ -19,9 +19,9 @@ import java.util.List;
  * Created by wuxinjun on 16/9/14.
  */
 @Service("paymentDBService")
-public class PaymentDBServiceImpl implements IPaymentDBService{
+public class PaymentDBServiceImpl implements IPaymentDBService {
     @Autowired
-    private PaymentMapper  paymentMapper;
+    private PaymentMapper paymentMapper;
     @Autowired
     private PaymentResultMapper paymentResultMapper;
     @Autowired
@@ -53,7 +53,8 @@ public class PaymentDBServiceImpl implements IPaymentDBService{
         paymentExample.setOrderByClause("ID DESC");
         List<Payment> payments = paymentMapper.selectByExample(paymentExample);
         if (payments == null || payments.size() == 0)
-            throw new EasyPayException(String.format("没有找到对应%s的订单", paymentCode), EasyPayException.UNKNOWN_ERROR);
+            throw new EasyPayException(String.format("没有找到对应%s的订单", paymentCode),
+                EasyPayException.UNKNOWN_ERROR);
         return payments.get(0);
     }
 
@@ -61,8 +62,9 @@ public class PaymentDBServiceImpl implements IPaymentDBService{
     public PaymentResult getPaymentResult(String paymentCode) throws EasyPayException {
         PaymentResultExample paymentResultExample = new PaymentResultExample();
         paymentResultExample.createCriteria().andPaymentCodeEqualTo(paymentCode);
-        List<PaymentResult> paymentResults = paymentResultMapper.selectByExample(paymentResultExample);
-        if (paymentResults != null && paymentResults.size() > 0){
+        List<PaymentResult> paymentResults =
+            paymentResultMapper.selectByExample(paymentResultExample);
+        if (paymentResults != null && paymentResults.size() > 0) {
             return paymentResults.get(0);
         }
         return null;
@@ -71,7 +73,8 @@ public class PaymentDBServiceImpl implements IPaymentDBService{
     @Override
     public int savePaymentResult(PaymentResult paymentResult) throws EasyPayException {
 
-        if (paymentResult.getStatus().byteValue() == PayConstant.PaymentStatus.SUCCESS.byteValue()){
+        if (paymentResult.getStatus().byteValue() == PayConstant.PaymentStatus.SUCCESS
+            .byteValue()) {
             paymentResult.setNotifyStatus(PayConstant.NotifyResultStatus.SUCCESS.byteValue());
         } else {
             paymentResult.setNotifyStatus(PayConstant.NotifyResultStatus.RECEIVE.byteValue());
@@ -79,7 +82,8 @@ public class PaymentDBServiceImpl implements IPaymentDBService{
         PaymentResult existedPaymentResult = this.getPaymentResult(paymentResult.getPaymentCode());
         //已经接到支付回调通知
         if (existedPaymentResult != null) {
-            if (existedPaymentResult.getStatus().byteValue() == PayConstant.PaymentStatus.SUCCESS.byteValue()) {
+            if (existedPaymentResult.getStatus().byteValue() == PayConstant.PaymentStatus.SUCCESS
+                .byteValue()) {
                 return 0;
             }
             paymentResult.setId(existedPaymentResult.getId());
@@ -90,15 +94,16 @@ public class PaymentDBServiceImpl implements IPaymentDBService{
         } else {
             paymentResultMapper.insertSelective(paymentResult);
         }
-        if (paymentResult.getStatus().byteValue() == PayConstant.PaymentStatus.SUCCESS.byteValue()){
+        if (paymentResult.getStatus().byteValue() == PayConstant.PaymentStatus.SUCCESS
+            .byteValue()) {
             return 1;
         }
         return 2;
     }
 
     @Override
-    public List<PaymentResult> getPaymentResultsByPaymentCodes(List<String> paymentCodes, Byte status)
-        throws EasyPayException {
+    public List<PaymentResult> getPaymentResultsByPaymentCodes(List<String> paymentCodes,
+        Byte status) throws EasyPayException {
         if (paymentCodes.size() == 0) {
             throw new EasyPayException("paymentCode数目小于1", EasyPayException.UNKNOWN_ERROR);
         }

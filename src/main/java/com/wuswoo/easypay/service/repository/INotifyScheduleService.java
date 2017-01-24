@@ -11,14 +11,17 @@ public interface INotifyScheduleService {
 
     /**
      * 获取通知业务系统回调失败
+     *
      * @param tradeType
      * @param platformId
      * @return
      */
-    public List<NotifySchedule> getFailedNotifySchedulesByTradeTypeAndPlotformId(Byte tradeType, Integer platformId);
+    public List<NotifySchedule> getFailedNotifySchedulesByTradeTypeAndPlotformId(Byte tradeType,
+        Integer platformId);
 
     /**
      * 获取通知业务系统回调失败
+     *
      * @param maxNotifyCount
      * @param limit
      * @return
@@ -28,12 +31,14 @@ public interface INotifyScheduleService {
 
     /**
      * 获取通知
+     *
      * @param tradeId
      * @param tradeType
      * @param paymentCode
      * @param platformId
      * @return
      */
-    NotifySchedule getNotifySchedule(Long tradeId, Byte tradeType, String paymentCode, Integer platformId);
+    NotifySchedule getNotifySchedule(Long tradeId, Byte tradeType, String paymentCode,
+        Integer platformId);
 
 }

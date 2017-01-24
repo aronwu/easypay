@@ -53,7 +53,7 @@ public class RouterHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
 
         if (routeResult == null) {
             handleError(request, response, new MissingUriException(msg.uri()));
-            return ;
+            return;
         }
         try {
             doAction(request, response);
@@ -130,8 +130,9 @@ public class RouterHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
             ex.addError(ExceptionUtil.convertExcepitonToString(e));
             response.respondJson(ex);
         } else if (e instanceof IExceptionToHttpResponse) {
-            HttpExceptionResponse ex = ((IExceptionToHttpResponse)e).getHttpResponse();
-            response.setStatus(new HttpResponseStatus(Integer.parseInt(ex.getCode()), "Internal Server Error"));
+            HttpExceptionResponse ex = ((IExceptionToHttpResponse) e).getHttpResponse();
+            response.setStatus(
+                new HttpResponseStatus(Integer.parseInt(ex.getCode()), "Internal Server Error"));
             response.respondJson(ex);
         } else {
             //统一格式化成HttpExceptionResponse输出

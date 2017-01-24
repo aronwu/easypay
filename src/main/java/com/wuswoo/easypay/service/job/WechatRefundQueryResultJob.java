@@ -25,12 +25,14 @@ public class WechatRefundQueryResultJob {
     @Autowired
     private IRefundDBService refundDBService;
 
-    public WechatRefundQueryResultJob() {}
+    public WechatRefundQueryResultJob() {
+    }
+
     public void run() {
         logger.info("start run {}", logger.getName());
         logger.info("======================================================");
         // 15天以前的记录
-        Long startTime = System.currentTimeMillis() - 24*3600*15*1000;
+        Long startTime = System.currentTimeMillis() - 24 * 3600 * 15 * 1000;
         wechatAppPlatformRefundQuery(startTime);
         wechatWapPlatformRefundQuery(startTime);
         logger.info("end run {}", logger.getName());
@@ -42,19 +44,20 @@ public class WechatRefundQueryResultJob {
     }
 
     public void wechatWapPlatformRefundQuery(Long startTime) {
-        List<ResultQuery> resultQueryList =
-            resultQueryDBService.getPendingResultQueries(PayConstant.PlatformType.WEIXINWAP.intValue(),
+        List<ResultQuery> resultQueryList = resultQueryDBService
+            .getPendingResultQueries(PayConstant.PlatformType.WEIXINWAP.intValue(),
                 PayConstant.PaymentResultType.REFUND.byteValue(), startTime);
         logger.info("wechat WAP 等待退款记录处理数目: {}", resultQueryList.size());
-        IResultQueryService resultQueryService = PaymentServiceFactory.getQueryService(
-            PayConstant.PlatformType.WEIXINWAP.intValue());
-        for(ResultQuery resultQuery : resultQueryList) {
+        IResultQueryService resultQueryService =
+            PaymentServiceFactory.getQueryService(PayConstant.PlatformType.WEIXINWAP.intValue());
+        for (ResultQuery resultQuery : resultQueryList) {
             try {
                 logger.info("开始退款查询id:", resultQuery.getTradeId());
-                RefundResult refundResult = refundDBService.getRefundResultById(resultQuery.getTradeId());
+                RefundResult refundResult =
+                    refundDBService.getRefundResultById(resultQuery.getTradeId());
                 resultQueryService.queryRefund(refundResult);
                 logger.info("结束退款查询id:", resultQuery.getTradeId());
-            }catch(Exception ex) {
+            } catch (Exception ex) {
                 logger.info("微信退款失败 {}", ex);
 
             }

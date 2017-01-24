@@ -10,3 +10,4 @@
 /conf/certs/*/*
 /conf/certs/rsa_private_key.pem
 !.gitkeep
+/quality

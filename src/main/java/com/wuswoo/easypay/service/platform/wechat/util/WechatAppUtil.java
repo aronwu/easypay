@@ -12,37 +12,35 @@ import java.util.Map;
 
 public class WechatAppUtil {
 
-	public static boolean validateUnifiedorderResultSign(
-			UnifiedorderResult result, String key){
-		Map<String, String> map = MapUtil.objectToMap(result, "sign");
-		String sign = SignatureUtil.generateSign(map, key);
-		return sign.equals(result.getSign());
-	}
+    public static boolean validateUnifiedorderResultSign(UnifiedorderResult result, String key) {
+        Map<String, String> map = MapUtil.objectToMap(result, "sign");
+        String sign = SignatureUtil.generateSign(map, key);
+        return sign.equals(result.getSign());
+    }
 
-	public static boolean validateMchPayNotifySign(MchPayNotify result, String key){
-		Map<String, String> map = MapUtil.objectToMap(result, "sign");
-		String sign = SignatureUtil.generateSign(map, key);
-		return sign.equals(result.getSign());
-	}
-	
-	public static boolean validateMchOrderInfoResultSign(
-			MchOrderInfoResult result, String key){
-		Map<String, String> map = MapUtil.objectToMap(result, "sign");
-		String sign = SignatureUtil.generateSign(map, key);
-		return sign.equals(result.getSign());
-	}
-	
-	public static boolean validateSecapiPayRefundResultSign(
-			SecapiPayRefundResult result, String key){
-		Map<String, String> map = MapUtil.objectToMap(result, "sign");
-		String sign = SignatureUtil.generateSign(map, key);
-		return sign.equals(result.getSign());
-	}
-	
-	public static boolean validateRefundqueryResultSign(PayRefundQueryLoc result, String key){
-		Map<String, String> map = MapUtil.objectToMap(result, "sign");
-		String sign = SignatureUtil.generateSign(map, key);
-		return sign.equals(result.getSign());
-	}
-	
+    public static boolean validateMchPayNotifySign(MchPayNotify result, String key) {
+        Map<String, String> map = MapUtil.objectToMap(result, "sign");
+        String sign = SignatureUtil.generateSign(map, key);
+        return sign.equals(result.getSign());
+    }
+
+    public static boolean validateMchOrderInfoResultSign(MchOrderInfoResult result, String key) {
+        Map<String, String> map = MapUtil.objectToMap(result, "sign");
+        String sign = SignatureUtil.generateSign(map, key);
+        return sign.equals(result.getSign());
+    }
+
+    public static boolean validateSecapiPayRefundResultSign(SecapiPayRefundResult result,
+        String key) {
+        Map<String, String> map = MapUtil.objectToMap(result, "sign");
+        String sign = SignatureUtil.generateSign(map, key);
+        return sign.equals(result.getSign());
+    }
+
+    public static boolean validateRefundqueryResultSign(PayRefundQueryLoc result, String key) {
+        Map<String, String> map = MapUtil.objectToMap(result, "sign");
+        String sign = SignatureUtil.generateSign(map, key);
+        return sign.equals(result.getSign());
+    }
+
 }

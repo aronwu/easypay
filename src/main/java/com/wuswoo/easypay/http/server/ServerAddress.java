@@ -33,7 +33,7 @@ public class ServerAddress implements Serializable {
             return false;
         }
         ServerAddress n = (ServerAddress) obj;
-        return (this.host == n.getHost()) && (this.port == n.getPort());
+        return (this.host.equals(n.getHost()) && (this.port == n.getPort()));
     }
 
     @Override

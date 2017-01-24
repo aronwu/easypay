@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,8 @@ public class Request implements FullHttpRequest {
         clientIp = getClientIpFromChannel();
         remoteIp = getRemoteIpFromClientIpOrReverseProxy();
         String contentType = request.headers().get(HttpHeaderNames.CONTENT_TYPE);
-        if (HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString().equalsIgnoreCase(contentType)) {
+        if (HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString()
+            .equalsIgnoreCase(contentType)) {
             String content = request.content().toString(Feature.charset);
             QueryStringDecoder qsd = new QueryStringDecoder("?" + content);
             formParams = qsd.parameters();
@@ -65,9 +65,9 @@ public class Request implements FullHttpRequest {
             json = null;
         }
         logger.info("Request uri: {}", request.uri());
-        if (json != null){
+        if (json != null) {
             logger.info("Request json: {}", json);
-        } else if (formParams != null & formParams.size() >0) {
+        } else if (formParams != null && formParams.size() > 0) {
             logger.info("Request form: {}", JSONObject.toJSONString(formParams));
         }
         //初始化控制器方法和控制器Bean
@@ -133,10 +133,9 @@ public class Request implements FullHttpRequest {
         return formParams;
     }
 
-    public String formParam(String name) {
-        return formParam(name);
+    public List<String> formParam(String name) {
+        return formParams.get(name);
     }
-
 
     public String param(String name) {
         return routeResult.param(name);
@@ -206,11 +205,6 @@ public class Request implements FullHttpRequest {
     @Override
     public DecoderResult decoderResult() {
         return request.decoderResult();
-    }
-
-    @Override
-    public void setDecoderResult(DecoderResult arg0) {
-        request.setDecoderResult(arg0);
     }
 
     @Override
@@ -301,6 +295,11 @@ public class Request implements FullHttpRequest {
     @Override
     public DecoderResult getDecoderResult() {
         return request.decoderResult();
+    }
+
+    @Override
+    public void setDecoderResult(DecoderResult arg0) {
+        request.setDecoderResult(arg0);
     }
 
     @Override

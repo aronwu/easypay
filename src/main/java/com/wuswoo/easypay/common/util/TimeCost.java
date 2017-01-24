@@ -7,13 +7,14 @@ public class TimeCost {
 
     private transient long start;
 
-    public TimeCost() {}
+    public TimeCost() {
+    }
 
-    public void start(){
+    public void start() {
         this.start = System.currentTimeMillis();
     }
 
-    public long cost(){
+    public long cost() {
         return System.currentTimeMillis() - start;
     }
 }

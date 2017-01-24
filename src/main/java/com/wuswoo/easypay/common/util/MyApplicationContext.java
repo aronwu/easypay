@@ -15,34 +15,38 @@ import java.util.Properties;
 
 @SuppressWarnings("static-access")
 public class MyApplicationContext {
-    private Logger logger = LogManager.getLogger(MyApplicationContext.class);
-
     private static ApplicationContext ctx;
     private static MyApplicationContext instance = null;
-
     private static Properties properties;
 
-    static
-    {
+    static {
         /* 加载 log4j2 配置文件 */
         File file = new File("conf/log4j2.xml");
         System.out.println("log4j2 file location:" + file.getAbsolutePath());
         System.setProperty("log4j.configurationFile", file.getAbsolutePath());
         /* load properties */
         properties = new Properties();
+        InputStream in = null;
         try {
-            InputStream in = new BufferedInputStream(new FileInputStream(new File("conf/config.properties")));
+            in = new BufferedInputStream(new FileInputStream(new File("conf/config.properties")));
             properties.load(in);
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static MyApplicationContext getInstance(){
-        if(instance==null){
-            synchronized(MyApplicationContext.class){
-                if(instance==null){
-                    instance=new MyApplicationContext();
+    private Logger logger = LogManager.getLogger(MyApplicationContext.class);
+
+    private MyApplicationContext() {
+        initCtx();
+    }
+
+    public static MyApplicationContext getInstance() {
+        if (instance == null) {
+            synchronized (MyApplicationContext.class) {
+                if (instance == null) {
+                    instance = new MyApplicationContext();
                 }
             }
         }
@@ -54,53 +58,47 @@ public class MyApplicationContext {
         return properties;
     }
 
-
-    private MyApplicationContext() {
-        initCtx();
+    public static void main(String[] args) {
+        getInstance();
     }
 
-    private void initCtx(){
-        try{
-            if(ctx == null) {
+    private void initCtx() {
+        try {
+            if (ctx == null) {
                 String applicationContextFileLocation = "conf/spring-context.xml";
                 File file = new File(applicationContextFileLocation);
-                logger.info("applicationContext: [{}]", file.getAbsolutePath() );
+                logger.info("applicationContext: [{}]", file.getAbsolutePath());
                 ctx = new FileSystemXmlApplicationContext(applicationContextFileLocation);
                 javax.sql.DataSource dataSource =
                     this.getBean("dataSource", javax.sql.DataSource.class);
                 java.sql.Connection connection = dataSource.getConnection();
                 connection.close();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error("InitCtx Error:", e);
             System.exit(1);
         }
     }
 
-    public ApplicationContext getApplicationContext(){
+    public ApplicationContext getApplicationContext() {
         return this.ctx;
     }
 
-    public void destroy()
-    {
-        if(ctx != null)
-            ((FileSystemXmlApplicationContext)ctx).destroy();
+    public void destroy() {
+        if (ctx != null)
+            ((FileSystemXmlApplicationContext) ctx).destroy();
     }
 
-    public <T> T  getBean(String beanId, Class<T> clazz){
+    public <T> T getBean(String beanId, Class<T> clazz) {
         return ctx.getBean(beanId, clazz);
     }
 
-    public Object getBean(String beanId){
+    public Object getBean(String beanId) {
         return ctx.getBean(beanId);
     }
 
-    public <T> T  getBean(Class<T> clazz){
+    public <T> T getBean(Class<T> clazz) {
         return ctx.getBean(clazz);
-    }
-
-    public static void main(String[] args) {
-        getInstance();
     }
 
 }

@@ -45,49 +45,61 @@ public class Response implements FullHttpResponse {
             String charset = Feature.charset.displayName();
             if (fallbackContentType != null) {
                 // https://developers.google.com/speed/docs/best-practices/rendering#SpecifyCharsetEarly
-                final String withCharset =
-                    fallbackContentType.toLowerCase().contains("charset") ?
-                        fallbackContentType :
-                        fallbackContentType + "; charset=" + charset;
+                final String withCharset = fallbackContentType.toLowerCase().contains("charset") ?
+                    fallbackContentType :
+                    fallbackContentType + "; charset=" + charset;
                 response.headers().set(HttpHeaderNames.CONTENT_TYPE, withCharset);
             } else {
-                response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=" + charset);
+                response.headers()
+                    .set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=" + charset);
             }
         }
         logger.info("Response: {}", respondedText);
-        ByteBuf buf = Unpooled.copiedBuffer(respondedText,Feature.charset );
+        ByteBuf buf = Unpooled.copiedBuffer(respondedText, Feature.charset);
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, buf.readableBytes());
         response.content().writeBytes(buf);
         return channel.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
 
-    /** xml Content-Type 是  "application/xml". */
+    /**
+     * xml Content-Type 是  "application/xml".
+     */
     public ChannelFuture respondXml(Object any) throws Exception {
         return respondText(any, "application/xml");
     }
 
-    /** html Content-Type 是  "text/html". */
+    /**
+     * html Content-Type 是  "text/html".
+     */
     public ChannelFuture respondHtml(Object any) throws Exception {
         return respondText(any, "text/html");
     }
 
-    /** js Content-Type 是 "application/javascript". */
+    /**
+     * js Content-Type 是 "application/javascript".
+     */
     public ChannelFuture respondJs(Object any) throws Exception {
         return respondText(any, "application/javascript");
     }
 
-    /** 对象 Content-Type 是 "application/json". */
+    /**
+     * 对象 Content-Type 是 "application/json".
+     */
     public ChannelFuture respondJsonText(Object any) throws Exception {
         return respondText(any, "application/json");
     }
 
-    /** json Content-Type 是 "application/json". */
+    /**
+     * json Content-Type 是 "application/json".
+     */
     public ChannelFuture respondJson(Object ref) throws Exception {
         final String json = JSONObject.toJSONString(ref, Feature.RESPONSE_JSON_SERIAL_FEATURE);
         return respondText(json, "application/json");
     }
 
-    /** jsonp Content-Type 是 "application/javascript". */
+    /**
+     * jsonp Content-Type 是 "application/javascript".
+     */
     public ChannelFuture respondJsonP(Object ref, String function) throws Exception {
         final String json = JSONObject.toJSONString(ref, Feature.RESPONSE_JSON_SERIAL_FEATURE);
         final String text = function + "(" + json + ");\r\n";
@@ -100,12 +112,16 @@ public class Response implements FullHttpResponse {
 
     //----------------------------------------------------------------------------
 
-    /** 默认 Content-Type 是 "application/octet-stream". */
+    /**
+     * 默认 Content-Type 是 "application/octet-stream".
+     */
     public ChannelFuture respondBinary(byte[] bytes) throws Exception {
         return respondBinary(Unpooled.wrappedBuffer(bytes));
     }
 
-    /** 默认 Content-Type 是 "application/octet-stream". */
+    /**
+     * 默认 Content-Type 是 "application/octet-stream".
+     */
     public ChannelFuture respondBinary(ByteBuf byteBuf) throws Exception {
         if (!response.headers().contains(HttpHeaderNames.CONTENT_TYPE))
             response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/octet-stream");
@@ -205,13 +221,13 @@ public class Response implements FullHttpResponse {
     }
 
     @Override
-    public DecoderResult decoderResult() {
-        return response.decoderResult();
+    public void setDecoderResult(DecoderResult result) {
+        response.setDecoderResult(result);
     }
 
     @Override
-    public void setDecoderResult(DecoderResult result) {
-        response.setDecoderResult(result);
+    public DecoderResult decoderResult() {
+        return response.decoderResult();
     }
 
     @Override

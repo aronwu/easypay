@@ -15,17 +15,17 @@
  */
 package com.wuswoo.easypay.http.handler.http.router;
 
-import static io.netty.handler.codec.http.HttpMethod.*;
-
-import static org.junit.Assert.*;
-
-import com.wuswoo.easypay.http.router.RouteResult;
 import com.wuswoo.easypay.http.router.MethodlessRouter;
+import com.wuswoo.easypay.http.router.RouteResult;
 import io.netty.handler.codec.http.HttpMethod;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Set;
+
+import static io.netty.handler.codec.http.HttpMethod.GET;
+import static io.netty.handler.codec.http.HttpMethod.POST;
+import static org.junit.Assert.*;
 
 public class RoutingTest {
     @Test
@@ -43,20 +43,21 @@ public class RoutingTest {
     public void testHandleEmptyParams() {
         RouteResult<String> routed = StringRouter.router.route(GET, "/articles");
         assertEquals("index", routed.target());
-        assertEquals(0,       routed.pathParams().size());
+        assertEquals(0, routed.pathParams().size());
     }
 
     @Test
     public void testHandleParams() {
         RouteResult<String> routed = StringRouter.router.route(GET, "/articles/123");
         assertEquals("show", routed.target());
-        assertEquals(1,      routed.pathParams().size());
-        assertEquals("123",  routed.pathParams().get("id"));
+        assertEquals(1, routed.pathParams().size());
+        assertEquals("123", routed.pathParams().get("id"));
     }
 
     @Test
     public void testHandleNone() {
-        MethodlessRouter<String> router = new MethodlessRouter<String>().addRoute("/articles", "index");
+        MethodlessRouter<String> router =
+            new MethodlessRouter<String>().addRoute("/articles", "index");
         RouteResult<String> routed = router.route("/noexist");
         assertEquals(true, routed == null);
     }
@@ -64,8 +65,8 @@ public class RoutingTest {
     @Test
     public void testHandleSplatWildcard() {
         RouteResult<String> routed = StringRouter.router.route(GET, "/download/foo/bar.png");
-        assertEquals("download",    routed.target());
-        assertEquals(1,             routed.pathParams().size());
+        assertEquals("download", routed.target());
+        assertEquals(1, routed.pathParams().size());
         assertEquals("foo/bar.png", routed.pathParams().get("*"));
     }
 
@@ -73,32 +74,33 @@ public class RoutingTest {
     public void testHandleOrder() {
         RouteResult<String> routed1 = StringRouter.router.route(GET, "/articles/new");
         assertEquals("new", routed1.target());
-        assertEquals(0,     routed1.pathParams().size());
+        assertEquals(0, routed1.pathParams().size());
 
         RouteResult<String> routed2 = StringRouter.router.route(GET, "/articles/123");
         assertEquals("show", routed2.target());
-        assertEquals(1,      routed2.pathParams().size());
-        assertEquals("123",  routed2.pathParams().get("id"));
+        assertEquals(1, routed2.pathParams().size());
+        assertEquals("123", routed2.pathParams().get("id"));
 
         RouteResult<String> routed3 = StringRouter.router.route(GET, "/notfound");
         assertEquals("404", routed3.target());
-        assertEquals(0,     routed3.pathParams().size());
+        assertEquals(0, routed3.pathParams().size());
     }
 
     @Test
     public void testHandleAnyMethod() {
         RouteResult<String> routed1 = StringRouter.router.route(GET, "/anyMethod");
         assertEquals("anyMethod", routed1.target());
-        assertEquals(0,           routed1.pathParams().size());
+        assertEquals(0, routed1.pathParams().size());
 
         RouteResult<String> routed2 = StringRouter.router.route(POST, "/anyMethod");
         assertEquals("anyMethod", routed2.target());
-        assertEquals(0,           routed2.pathParams().size());
+        assertEquals(0, routed2.pathParams().size());
     }
 
     @Test
     public void testHandleRemoveByTarget() {
-        MethodlessRouter<String> router = new MethodlessRouter<String>().addRoute("/articles", "index");
+        MethodlessRouter<String> router =
+            new MethodlessRouter<String>().addRoute("/articles", "index");
         router.removeTarget("index");
         RouteResult<String> routed = router.route("/articles");
         assertEquals(true, routed == null);
@@ -106,7 +108,8 @@ public class RoutingTest {
 
     @Test
     public void testHandleRemoveByPath() {
-        MethodlessRouter<String> router = new MethodlessRouter<String>().addRoute("/articles", "index");
+        MethodlessRouter<String> router =
+            new MethodlessRouter<String>().addRoute("/articles", "index");
         router.removePath("/articles");
         RouteResult<String> routed = router.route("/articles");
         assertEquals(true, routed == null);
@@ -124,8 +127,9 @@ public class RoutingTest {
 
     @Test
     public void testHandleSubclasses() {
-        MethodlessRouter<Class<? extends Action>> router = new MethodlessRouter<Class<? extends Action>>();
-        router.addRoute("/articles",     Index.class);
+        MethodlessRouter<Class<? extends Action>> router =
+            new MethodlessRouter<Class<? extends Action>>();
+        router.addRoute("/articles", Index.class);
         router.addRoute("/articles/:id", Show.class);
 
         RouteResult<Class<? extends Action>> routed1 = router.route("/articles");
@@ -133,6 +137,6 @@ public class RoutingTest {
         assertNotNull(routed1);
         assertNotNull(routed2);
         assertEquals(Index.class, routed1.target());
-        assertEquals(Show.class,  routed2.target());
+        assertEquals(Show.class, routed2.target());
     }
 }

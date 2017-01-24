@@ -15,20 +15,22 @@ public class NotifyRefundResultsTask implements ITask {
     private ICallbackService callbackService;
     private List<RefundResult> refundResults;
 
-    public NotifyRefundResultsTask(){
+    public NotifyRefundResultsTask() {
         super();
     }
 
-    public NotifyRefundResultsTask(ICallbackService callbackService, List<RefundResult> refundResults) {
+    public NotifyRefundResultsTask(ICallbackService callbackService,
+        List<RefundResult> refundResults) {
         this.callbackService = callbackService;
         this.refundResults = refundResults;
     }
+
     @Override
     public void run() {
-        if (refundResults == null || refundResults.size() == 0){
+        if (refundResults == null || refundResults.size() == 0) {
             return;
         }
-        for(RefundResult refundResult : refundResults) {
+        for (RefundResult refundResult : refundResults) {
             NotifySchedule notifySchedule = new NotifySchedule();
             notifySchedule.setPaymentCode(refundResult.getPaymentCode());
             notifySchedule.setTradeId(refundResult.getId());

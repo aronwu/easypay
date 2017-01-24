@@ -1,6 +1,5 @@
 package com.wuswoo.easypay.service.repository.impl;
 
-import com.mysql.jdbc.Util;
 import com.wuswoo.easypay.service.exception.EasyPayException;
 import com.wuswoo.easypay.service.mapper.PaymentExtMapper;
 import com.wuswoo.easypay.service.mapper.RefundMapper;
@@ -35,13 +34,15 @@ public class RefundDBServiceImpl implements IRefundDBService {
 
     @Value("${production}")
     private boolean production;
+
     @Override
     public Refund getRefundByRefundCode(String refundCode) {
         RefundExample refundExample = new RefundExample();
         refundExample.createCriteria().andRefundBatchCodeEqualTo(refundCode);
         List<Refund> refunds = refundMapper.selectByExample(refundExample);
-        return refunds != null && refunds.size() >0 ? refunds.get(0): null;
+        return refunds != null && refunds.size() > 0 ? refunds.get(0) : null;
     }
+
     @Override
     public Refund getRefundById(Long refundId) {
         return refundMapper.selectByPrimaryKey(refundId);
@@ -53,23 +54,27 @@ public class RefundDBServiceImpl implements IRefundDBService {
         Date current = new Date();
         refund.setCreatedTime(current);
         refund.setUpdatedTime(current);
-        refund.setSuccessNum((short)0);
-        refund.setBatchNum((short)refundResults.size());
+        refund.setSuccessNum((short) 0);
+        refund.setBatchNum((short) refundResults.size());
         refundMapper.insertSelective(refund);
-        String refundBatchCode = Utilities.getRefundCode(this.production, refund.getPlatformId(), refund.getId(), 0);
+        String refundBatchCode =
+            Utilities.getRefundCode(this.production, refund.getPlatformId(), refund.getId(), 0);
         Refund newRefund = new Refund();
         newRefund.setId(refund.getId());
         newRefund.setRefundBatchCode(refundBatchCode);
         this.updateRefund(newRefund);
 
-        for (RefundResult refundResult:refundResults) {
+        for (RefundResult refundResult : refundResults) {
             refundResult.setCreatedTime(current);
             refundResult.setUpdatedTime(current);
             refundResult.setRefundId(refund.getId());
-            if (PayConstant.PlatformType.ALIPAYAPP.byteValue() == refund.getPlatformId().byteValue()) {
+            if (PayConstant.PlatformType.ALIPAYAPP.byteValue() == refund.getPlatformId()
+                .byteValue()) {
                 refundResult.setRefundCode(refundBatchCode);
             } else {
-                refundResult.setRefundCode(Utilities.getRefundCode(this.production, refund.getPlatformId(), refundResult.getOrderId(), 8));
+                refundResult.setRefundCode(Utilities
+                    .getRefundCode(this.production, refund.getPlatformId(),
+                        refundResult.getOrderId(), 8));
             }
             refundResultMapper.insertSelective(refundResult);
         }
@@ -105,16 +110,18 @@ public class RefundDBServiceImpl implements IRefundDBService {
         throws EasyPayException {
         boolean needNofity = false;
         //只有新增的退款记录或者更新的退款成功记录,需要更新通知.
-        for(RefundResult refundResult:refundResults) {
+        for (RefundResult refundResult : refundResults) {
             RefundResult existedRefundResult = null;
-            if (refundResult.getId() == null){
-                existedRefundResult = getRefundResultByRefundIdAndTradeNo(refund.getId(), refundResult.getTradeNo());
+            if (refundResult.getId() == null) {
+                existedRefundResult =
+                    getRefundResultByRefundIdAndTradeNo(refund.getId(), refundResult.getTradeNo());
             } else {
                 existedRefundResult = getRefundResultById(refundResult.getId());
             }
-            if (existedRefundResult != null){
+            if (existedRefundResult != null) {
                 //已经退款成功不再保存记录
-                if (PayConstant.RefundStatus.REFUND_SUCCESS.byteValue() == existedRefundResult.getStatus().byteValue()) {
+                if (PayConstant.RefundStatus.REFUND_SUCCESS.byteValue() == existedRefundResult
+                    .getStatus().byteValue()) {
                     continue;
                 } else {
                     needNofity = true;
@@ -149,7 +156,7 @@ public class RefundDBServiceImpl implements IRefundDBService {
         refundResultExample.createCriteria().andRefundCodeEqualTo(refundCode)
             .andPlatformIdEqualTo(platformId);
         List<RefundResult> refundResults = refundResultMapper.selectByExample(refundResultExample);
-        return refundResults != null && refundResults.size() >0 ? refundResults.get(0) : null;
+        return refundResults != null && refundResults.size() > 0 ? refundResults.get(0) : null;
 
     }
 

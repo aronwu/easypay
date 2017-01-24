@@ -16,12 +16,12 @@ public abstract class AbstractPaymentService implements IEasyPaymentService {
         this.paymentRequest = paymentRequest;
     }
 
-    public void setVerifySignature(IVerifySignature verifySignature) {
-        this.verifySignature = verifySignature;
-    }
-
     public IVerifySignature getVerifySignature() {
         return verifySignature;
+    }
+
+    public void setVerifySignature(IVerifySignature verifySignature) {
+        this.verifySignature = verifySignature;
     }
 
     public BaseRequest getPaymentRequest() {
@@ -35,12 +35,14 @@ public abstract class AbstractPaymentService implements IEasyPaymentService {
     @Override
     public PaymentResult getNotifyPaymentResult(Request request, Integer platformId)
         throws EasyPayException {
-        if (getVerifySignature() != null && !getVerifySignature().verify(request) ) {
-            throw new EasyPayException("payment result signature verify is failed for platformId:" + platformId);
+        if (getVerifySignature() != null && !getVerifySignature().verify(request)) {
+            throw new EasyPayException(
+                "payment result signature verify is failed for platformId:" + platformId);
         }
 
         return makePaymentResult(request, platformId);
     }
 
-    protected abstract PaymentResult makePaymentResult(Request request, Integer platformId) throws EasyPayException;
+    protected abstract PaymentResult makePaymentResult(Request request, Integer platformId)
+        throws EasyPayException;
 }

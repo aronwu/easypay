@@ -1,7 +1,7 @@
 package com.wuswoo.easypay.service.model;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "payment_result")
 public class PaymentResult {
@@ -37,8 +37,7 @@ public class PaymentResult {
 
     /**
      * 1 success
- 2 success but sign verify fail 10 fail
-
+     * 2 success but sign verify fail 10 fail
      */
     private Byte status;
 
@@ -56,10 +55,10 @@ public class PaymentResult {
 
     /**
      * 记录校验订单是否匹配
-0 正常
-1 异常
-用于校验第三方返回的数据是否和我们发出去的数据保持一致
-如果不正确，
+     * 0 正常
+     * 1 异常
+     * 用于校验第三方返回的数据是否和我们发出去的数据保持一致
+     * 如果不正确，
      */
     @Column(name = "return_check")
     private Byte returnCheck;
@@ -196,12 +195,10 @@ public class PaymentResult {
 
     /**
      * 获取1 success
- 2 success but sign verify fail 10 fail
-
+     * 2 success but sign verify fail 10 fail
      *
      * @return status - 1 success
- 2 success but sign verify fail 10 fail
-
+     * 2 success but sign verify fail 10 fail
      */
     public Byte getStatus() {
         return status;
@@ -209,12 +206,10 @@ public class PaymentResult {
 
     /**
      * 设置1 success
- 2 success but sign verify fail 10 fail
-
+     * 2 success but sign verify fail 10 fail
      *
      * @param status 1 success
- 2 success but sign verify fail 10 fail
-
+     *               2 success but sign verify fail 10 fail
      */
     public void setStatus(Byte status) {
         this.status = status;
@@ -258,16 +253,16 @@ public class PaymentResult {
 
     /**
      * 获取记录校验订单是否匹配
-0 正常
-1 异常
-用于校验第三方返回的数据是否和我们发出去的数据保持一致
-如果不正确，
+     * 0 正常
+     * 1 异常
+     * 用于校验第三方返回的数据是否和我们发出去的数据保持一致
+     * 如果不正确，
      *
      * @return return_check - 记录校验订单是否匹配
-0 正常
-1 异常
-用于校验第三方返回的数据是否和我们发出去的数据保持一致
-如果不正确，
+     * 0 正常
+     * 1 异常
+     * 用于校验第三方返回的数据是否和我们发出去的数据保持一致
+     * 如果不正确，
      */
     public Byte getReturnCheck() {
         return returnCheck;
@@ -275,16 +270,16 @@ public class PaymentResult {
 
     /**
      * 设置记录校验订单是否匹配
-0 正常
-1 异常
-用于校验第三方返回的数据是否和我们发出去的数据保持一致
-如果不正确，
+     * 0 正常
+     * 1 异常
+     * 用于校验第三方返回的数据是否和我们发出去的数据保持一致
+     * 如果不正确，
      *
      * @param returnCheck 记录校验订单是否匹配
-0 正常
-1 异常
-用于校验第三方返回的数据是否和我们发出去的数据保持一致
-如果不正确，
+     *                    0 正常
+     *                    1 异常
+     *                    用于校验第三方返回的数据是否和我们发出去的数据保持一致
+     *                    如果不正确，
      */
     public void setReturnCheck(Byte returnCheck) {
         this.returnCheck = returnCheck;

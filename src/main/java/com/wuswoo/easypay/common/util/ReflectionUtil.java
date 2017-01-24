@@ -13,7 +13,8 @@ import java.util.HashMap;
  */
 public class ReflectionUtil {
 
-    private static final LRUCache<String, HashMap<String, Field>> classFieldsCache = new LRUCache<String, HashMap<String, Field>>(50);
+    private static final LRUCache<String, HashMap<String, Field>> classFieldsCache =
+        new LRUCache<String, HashMap<String, Field>>(50);
 
 
     public static Method getJoinPointMethod(ProceedingJoinPoint joinPoint)
@@ -21,7 +22,8 @@ public class ReflectionUtil {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         if (method.getDeclaringClass().isInterface()) {
-            method = joinPoint.getTarget().getClass().getDeclaredMethod(method.getName(), method.getParameterTypes());
+            method = joinPoint.getTarget().getClass()
+                .getDeclaredMethod(method.getName(), method.getParameterTypes());
         }
         return method;
     }
@@ -31,7 +33,7 @@ public class ReflectionUtil {
         if (classFields == null) {
             classFields = new HashMap<String, Field>();
             Field[] fields = clazz.getDeclaredFields();
-            for(Field field : fields) {
+            for (Field field : fields) {
                 classFields.put(field.getName(), field);
             }
             classFieldsCache.put(clazz.getName(), classFields);
@@ -44,7 +46,7 @@ public class ReflectionUtil {
         Field[] fields = object.getClass().getDeclaredFields();
         T newObject = clazz.newInstance();
         HashMap<String, Field> classFields = getClassFields(clazz);
-        for(Field field : fields) {
+        for (Field field : fields) {
             try {
                 field.setAccessible(true);
                 Object value = field.get(object);
@@ -53,7 +55,7 @@ public class ReflectionUtil {
                     classField.setAccessible(true);
                     classField.set(newObject, value);
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
             }
         }
         return newObject;
@@ -64,7 +66,7 @@ public class ReflectionUtil {
         Field[] fields = from.getClass().getDeclaredFields();
         Class clazz = to.getClass();
         HashMap<String, Field> classFields = getClassFields(clazz);
-        for(Field field : fields) {
+        for (Field field : fields) {
             try {
                 field.setAccessible(true);
                 Object value = field.get(from);
@@ -73,7 +75,7 @@ public class ReflectionUtil {
                     classField.setAccessible(true);
                     classField.set(to, value);
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
 
             }
         }

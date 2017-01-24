@@ -13,7 +13,7 @@ public class MissingUriException extends RuntimeException {
     }
 
     public MissingUriException(String uri, Throwable cause) {
-        super(String.format("uri:% is not match", uri), cause);
+        super(String.format("uri:%s is not match", uri), cause);
         this.uri = uri;
     }
 

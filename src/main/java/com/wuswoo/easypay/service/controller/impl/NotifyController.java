@@ -1,10 +1,8 @@
 package com.wuswoo.easypay.service.controller.impl;
 
-import com.wuswoo.easypay.common.util.TimeCost;
 import com.wuswoo.easypay.http.server.Request;
 import com.wuswoo.easypay.http.server.Response;
 import com.wuswoo.easypay.service.controller.INotifyController;
-
 import com.wuswoo.easypay.service.model.PaymentResult;
 import com.wuswoo.easypay.service.model.RefundAndResults;
 import com.wuswoo.easypay.service.payment.IEasyPaymentService;
@@ -34,8 +32,9 @@ public class NotifyController implements INotifyController {
             platformId = PayConstant.PlatformType.WEIXINWAP.intValue();
         }
         boolean result = false;
-        IEasyPaymentService easyPaymentService = PaymentServiceFactory.getPaymentService(platformId);
-        PaymentResult  paymentResult = null;
+        IEasyPaymentService easyPaymentService =
+            PaymentServiceFactory.getPaymentService(platformId);
+        PaymentResult paymentResult = null;
         try {
             paymentResult = easyPaymentService.getNotifyPaymentResult(request, platformId);
             result = zhifuService.savePaymentResult(paymentResult, false);
@@ -56,8 +55,10 @@ public class NotifyController implements INotifyController {
         boolean result = false;
         IRefundService refundService = PaymentServiceFactory.getRefundService(platformId);
         try {
-            RefundAndResults  refundAndResults = refundService.getRefundAndResults(request, platformId);
-            result = zhifuService.saveRefundAndResults(refundAndResults.getRefund(), refundAndResults.getRefundResults());
+            RefundAndResults refundAndResults =
+                refundService.getRefundAndResults(request, platformId);
+            result = zhifuService.saveRefundAndResults(refundAndResults.getRefund(),
+                refundAndResults.getRefundResults());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             result = false;

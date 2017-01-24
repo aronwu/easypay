@@ -1,12 +1,8 @@
 package com.wuswoo.easypay.service.callback.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.wuswoo.easypay.common.util.MyApplicationContext;
 import com.wuswoo.easypay.service.callback.ICallbackTask;
-import com.wuswoo.easypay.service.mapper.NotifyFailedLogMapper;
-import com.wuswoo.easypay.service.mapper.NotifyScheduleMapper;
 import com.wuswoo.easypay.service.misc.PaymentEvent;
-import com.wuswoo.easypay.service.misc.rabbitmq.MQSender;
 import com.wuswoo.easypay.service.model.NotifySchedule;
 import com.wuswoo.easypay.service.model.Payment;
 import com.wuswoo.easypay.service.repository.INotifyScheduleService;
@@ -23,9 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -34,27 +28,20 @@ import java.util.Date;
  */
 public class KafkaCallbackTask implements ICallbackTask {
     private static final Logger logger = LogManager.getLogger(KafkaCallbackTask.class);
-
+    @Value("${kafka.topic}")
+    String kafkaTopic;
+    @Value("${easypay.callback.appId}")
+    String appId;
     private NotifySchedule notifySchedule;
-
     @Autowired
     private IPaymentService paymentService;
-
     @Autowired
     private INotifyScheduleService notifyScheduleService;
-
     @Autowired
     private IPaymentDBService paymentDBService;
-
     @Autowired
     @Qualifier("kafkaProducer")
     private KafkaProducer<String, String> kafkaProducer;
-
-    @Value("${kafka.topic}")
-    String kafkaTopic;
-
-    @Value("${easypay.callback.appId}")
-    String appId;
 
     @Override
     public void setNotifySchedule(NotifySchedule notifySchedule) {
@@ -66,25 +53,24 @@ public class KafkaCallbackTask implements ICallbackTask {
         logger.info("start to notify kafka server: {}", JSON.toJSONString(notifySchedule));
         //check paymentCode existed or not
         try {
-            Payment payment = paymentDBService.getPaymentByPaymentCode(notifySchedule.getPaymentCode());
+            Payment payment =
+                paymentDBService.getPaymentByPaymentCode(notifySchedule.getPaymentCode());
         } catch (Exception ex) {
             logger.warn("找不到paymentCode: {}", notifySchedule.getPaymentCode());
             return;
         }
         //check notifyschedule existed status
-        NotifySchedule existedNotifySchedule = notifyScheduleService.getNotifySchedule(
-            notifySchedule.getTradeId(),
-            notifySchedule.getTradeType(),
-            notifySchedule.getPaymentCode(),
-            notifySchedule.getPlatformId()
-        );
+        NotifySchedule existedNotifySchedule = notifyScheduleService
+            .getNotifySchedule(notifySchedule.getTradeId(), notifySchedule.getTradeType(),
+                notifySchedule.getPaymentCode(), notifySchedule.getPlatformId());
         //notifySchedule.setNotifyContent(JSON.toJSONString(notifySchedule));
         if (existedNotifySchedule != null) {
             notifySchedule.setId(existedNotifySchedule.getId());
             notifySchedule.setNotifyCount(existedNotifySchedule.getNotifyCount());
             //如果已经通知成功,直接返回
-            if (notifySchedule.getNotifyStatus() != null &&
-                PayConstant.NotifyResultStatus.SUCCESS.byteValue() == existedNotifySchedule.getNotifyStatus().byteValue()) {
+            if (notifySchedule.getNotifyStatus() != null
+                && PayConstant.NotifyResultStatus.SUCCESS.byteValue() == existedNotifySchedule
+                .getNotifyStatus().byteValue()) {
                 logger.info("already notify to kafka server.");
                 return;
             }
@@ -93,17 +79,19 @@ public class KafkaCallbackTask implements ICallbackTask {
         try {
             PaymentEvent event = new PaymentEvent();
             Integer appCode = 1;
-            if (!StringUtils.isBlank(appId)){
+            if (!StringUtils.isBlank(appId)) {
                 appCode = Integer.parseInt(appId);
             }
-            if (notifySchedule.getTradeType().byteValue() == PayConstant.NotifyResultType.PAYMENT.byteValue()) {
+            if (notifySchedule.getTradeType().byteValue() == PayConstant.NotifyResultType.PAYMENT
+                .byteValue()) {
                 event.setEventType(PayConstant.NotifyEvent.PAYMENT);
             }
-            if (notifySchedule.getTradeType().byteValue() == PayConstant.NotifyResultType.REFUND.byteValue()) {
+            if (notifySchedule.getTradeType().byteValue() == PayConstant.NotifyResultType.REFUND
+                .byteValue()) {
                 event.setEventType(PayConstant.NotifyEvent.REFUND);
             }
             event.setAppCode(appCode);
-            event.setContent((JSON)JSON.toJSON(notifySchedule));
+            event.setContent((JSON) JSON.toJSON(notifySchedule));
             sendNotify(event);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -112,9 +100,9 @@ public class KafkaCallbackTask implements ICallbackTask {
         }
     }
 
-    private void sendNotify(PaymentEvent event)
-    {
-        ProducerRecord<String, String> data = new ProducerRecord<String, String>(kafkaTopic, JSON.toJSONString(event));
+    private void sendNotify(PaymentEvent event) {
+        ProducerRecord<String, String> data =
+            new ProducerRecord<String, String>(kafkaTopic, JSON.toJSONString(event));
         kafkaProducer.send(data, new Callback() {
             @Override
             public void onCompletion(RecordMetadata recordMetadata, Exception e) {
@@ -125,7 +113,8 @@ public class KafkaCallbackTask implements ICallbackTask {
                 } else {
                     //发送失败
                     logger.error("发送消息到kafka出现错误", e);
-                    updateNotifySchedule(PayConstant.NotifyResultStatus.FAIL.byteValue(), e.getMessage());
+                    updateNotifySchedule(PayConstant.NotifyResultStatus.FAIL.byteValue(),
+                        e.getMessage());
                 }
             }
         });
@@ -139,7 +128,7 @@ public class KafkaCallbackTask implements ICallbackTask {
             newNs.setNotifyStatus(status);
             newNs.setUpdatedTime(new Date());
             newNs.setNotifyReturn(message);
-            newNs.setNotifyCount((byte)(notifySchedule.getNotifyCount() + 1));
+            newNs.setNotifyCount((byte) (notifySchedule.getNotifyCount() + 1));
             paymentService.updateNotifySchedule(newNs);
         } else {
             notifySchedule.setNotifyStatus(status);

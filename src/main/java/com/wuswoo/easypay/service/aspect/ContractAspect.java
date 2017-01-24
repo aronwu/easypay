@@ -7,7 +7,6 @@ import com.wuswoo.easypay.http.server.Request;
 import com.wuswoo.easypay.service.exception.EasyPayException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.pattern.LiteralPatternConverter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,8 +24,12 @@ import java.util.Map;
 @Aspect
 public class ContractAspect {
     private static final Logger logger = LogManager.getLogger(ContractAspect.class);
+
     @Pointcut("@annotation (com.wuswoo.easypay.service.aspect.Contract)")
-    private void contract(){};
+    private void contract() {
+    }
+
+    ;
 
     @Around("contract()")
     public Object contract(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -45,16 +48,17 @@ public class ContractAspect {
                 } else {
                     //throw validation errors exception
                     List<String> errors = new ArrayList<String>();
-                    for(Map.Entry<String, List<String>> entry : validationResult.entrySet()) {
+                    for (Map.Entry<String, List<String>> entry : validationResult.entrySet()) {
                         StringBuilder sb = new StringBuilder();
                         sb.append(entry.getKey() + ":");
-                        for(String er : entry.getValue()) {
+                        for (String er : entry.getValue()) {
                             sb.append(er + "\n");
                         }
                         errors.add(sb.toString());
                     }
                     //格式化Exception内容
-                    throw new EasyPayException("输入请求参数错误", EasyPayException.INPUT_CONTRACT_ERROR, errors);
+                    throw new EasyPayException("输入请求参数错误", EasyPayException.INPUT_CONTRACT_ERROR,
+                        errors);
                 }
             } else {
                 //throw no contract class value  exception

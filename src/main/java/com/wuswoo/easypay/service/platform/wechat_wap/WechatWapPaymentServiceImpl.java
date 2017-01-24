@@ -60,7 +60,8 @@ public class WechatWapPaymentServiceImpl extends AbstractPaymentService {
         wechatOrder.setMch_id(this.paymentRequest.getQueryParam("mch_id"));
         wechatOrder.setTrade_type(this.paymentRequest.getQueryParam("trade_type"));
         //微信回调url添加paymentcode,便于服务器访问日志区分不同的订单的回调
-        String notifiyUrl = this.paymentRequest.getQueryParam("notify_url") + "/" + payment.getPaymentCode();
+        String notifiyUrl =
+            this.paymentRequest.getQueryParam("notify_url") + "/" + payment.getPaymentCode();
         wechatOrder.setNotify_url(notifiyUrl);
         wechatOrder.setAttach(payment.getAttach());
         wechatOrder.setBody(payment.getItemDesc());
@@ -72,26 +73,32 @@ public class WechatWapPaymentServiceImpl extends AbstractPaymentService {
         logger.info("Wechat Unifiedorder: {}", JSONObject.toJSONString(wechatOrder, true));
         TimeCost timeCostUtil = new TimeCost();
         timeCostUtil.start();
-        UnifiedorderResult wechatResult = PayMchAPI.payUnifiedorder(wechatOrder, this.paymentRequest.getQueryParam("paterner_key"));
-        logger.info("Wechat Unifiedorder Spend time: {0}", java.lang.String.valueOf(timeCostUtil.cost()));
+        UnifiedorderResult wechatResult = PayMchAPI
+            .payUnifiedorder(wechatOrder, this.paymentRequest.getQueryParam("paterner_key"));
+        logger.info("Wechat Unifiedorder Spend time: {0}",
+            java.lang.String.valueOf(timeCostUtil.cost()));
         logger.info("Wechat Unifiedorder Result:{0}", JSONObject.toJSONString(wechatResult));
         //start to generate payment request
         PaymentRequest wechatRequest = new WechatPaymentWapRequest();
         if ("SUCCESS".equalsIgnoreCase(wechatResult.getResult_code())) {
             //请求成功验证签名
-            if (!WechatAppUtil.validateUnifiedorderResultSign(wechatResult,  this.paymentRequest.getQueryParam("paterner_key"))) {
+            if (!WechatAppUtil.validateUnifiedorderResultSign(wechatResult,
+                this.paymentRequest.getQueryParam("paterner_key"))) {
                 Map<String, String> map = MapUtil.objectToMap(wechatResult, "sign");
-                String sign = SignatureUtil.generateSign(map, this.paymentRequest.getQueryParam("paterner_key"));
-                logger.error("Wechat Unifiedorder Result Map: {0}", JSONObject.toJSONString(map, true));
+                String sign = SignatureUtil
+                    .generateSign(map, this.paymentRequest.getQueryParam("paterner_key"));
+                logger.error("Wechat Unifiedorder Result Map: {0}",
+                    JSONObject.toJSONString(map, true));
                 logger.error("WeChat Payment Signature validate error: {0}", sign);
                 throw new EasyPayException("微信支付请求签名验证失败", EasyPayException.WECHAT_SIGN_INVALIDATE);
             }
             wechatRequest.addParam("appId", wechatResult.getAppid());
-            wechatRequest.addParam("package","prepay_id=" + wechatResult.getPrepay_id());
+            wechatRequest.addParam("package", "prepay_id=" + wechatResult.getPrepay_id());
             wechatRequest.addParam("nonceStr", wechatResult.getNonce_str());
-            wechatRequest.addParam("timeStamp", String.valueOf(System.currentTimeMillis()/1000));
+            wechatRequest.addParam("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
             wechatRequest.addParam("signType", this.paymentRequest.getQueryParam("sign_type"));
-            String sign = SignatureUtil.generateSign(wechatRequest.getQueryParams(), this.paymentRequest.getQueryParam("paterner_key"));
+            String sign = SignatureUtil.generateSign(wechatRequest.getQueryParams(),
+                this.paymentRequest.getQueryParam("paterner_key"));
             wechatRequest.addParam("paySign", sign);
         } else {
             wechatRequest.addParam("code", EasyPayException.WECHAT_PAYMENT_ERROR);
@@ -109,14 +116,11 @@ public class WechatWapPaymentServiceImpl extends AbstractPaymentService {
 
     @Override
     public String returnPaymentPlatform(PaymentResult paymentResult, Boolean resultStatus) {
-        return resultStatus ? "<xml>"
-            + "<return_code><![CDATA[SUCCESS]]></return_code>"
-            + "<return_msg><![CDATA[OK]]></return_msg>"
-            + "</xml>"
-            : "<xml>"
-            + "<return_code><![CDATA[FAIL]]></return_code>"
-            + "<return_msg><![CDATA[处理失败]]></return_msg>"
-            + "</xml>";
+        return resultStatus ?
+            "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
+                + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml>" :
+            "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+                + "<return_msg><![CDATA[处理失败]]></return_msg>" + "</xml>";
     }
 
     @Override
@@ -127,28 +131,31 @@ public class WechatWapPaymentServiceImpl extends AbstractPaymentService {
             String contentXml = request.content().toString(Charset.forName("UTF-8"));
             MchPayNotify payNotify = XMLConverUtil.convertToObject(MchPayNotify.class, contentXml);
             if (payNotify != null && "SUCCESS".equalsIgnoreCase(payNotify.getReturn_code())) {
-                if (!WechatAppUtil.validateMchPayNotifySign(payNotify, this.paymentRequest.getQueryParam("paterner_key"))) {
+                if (!WechatAppUtil.validateMchPayNotifySign(payNotify,
+                    this.paymentRequest.getQueryParam("paterner_key"))) {
                     //验证失败
                     logger.error("微信支付回调签名验证失败:{0}", payNotify.getSign());
-                    throw new EasyPayException("微信支付回调签名验证失败", EasyPayException.WECHAT_SIGN_INVALIDATE);
+                    throw new EasyPayException("微信支付回调签名验证失败",
+                        EasyPayException.WECHAT_SIGN_INVALIDATE);
                 }
                 Date current = new Date();
                 paymentResult.setCreatedTime(current);
                 paymentResult.setUpdatedTime(current);
                 paymentResult.setNotifyTime(current);
-                paymentResult.setPaymentTime(DateTimeUtil.parseStringTo99BillDateTime(payNotify.getTime_end()));
+                paymentResult.setPaymentTime(
+                    DateTimeUtil.parseStringTo99BillDateTime(payNotify.getTime_end()));
                 paymentResult.setPlatformId(platformId);
                 paymentResult.setPayAmount(Integer.valueOf(payNotify.getTotal_fee()));
                 paymentResult.setTradeNo(payNotify.getTransaction_id());
                 paymentResult.setPaymentCode(payNotify.getOut_trade_no());
                 paymentResult.setReturnContent(contentXml);
                 paymentResult.setPlatformReturnCode(payNotify.getResult_code());
-                paymentResult.setStatus(
-                    "SUCCESS".equalsIgnoreCase(payNotify.getResult_code())
-                    ? PayConstant.PaymentStatus.SUCCESS.byteValue() : PayConstant.PaymentStatus.FAIL.byteValue()
-                );
+                paymentResult.setStatus("SUCCESS".equalsIgnoreCase(payNotify.getResult_code()) ?
+                    PayConstant.PaymentStatus.SUCCESS.byteValue() :
+                    PayConstant.PaymentStatus.FAIL.byteValue());
             } else {
-                logger.error("微信支付回调失败code: {0} message: {1}", payNotify.getReturn_code(), payNotify.getReturn_msg());
+                logger.error("微信支付回调失败code: {0} message: {1}", payNotify.getReturn_code(),
+                    payNotify.getReturn_msg());
                 throw new EasyPayException("微信支付回调失败", EasyPayException.WECHAT_NOTIFY_ERROR);
             }
         } catch (Exception e) {

@@ -8,60 +8,51 @@ import org.springframework.amqp.support.converter.MessageConversionException;
 
 import java.io.UnsupportedEncodingException;
 
-/** JSON 消息转换器 */
-public class FastJsonMessageConverter extends AbstractMessageConverter
-{
-	public static final String DEFAULT_CHARSET = "UTF-8";
-	private String defaultCharset = DEFAULT_CHARSET;
+/**
+ * JSON 消息转换器
+ */
+public class FastJsonMessageConverter extends AbstractMessageConverter {
+    public static final String DEFAULT_CHARSET = "UTF-8";
+    private String defaultCharset = DEFAULT_CHARSET;
 
-	@Override
-	protected Message createMessage(Object obj, MessageProperties props)
-	{
-		try
-		{
-			String json = JSON.toJSONString(obj);
-			byte[] body = json.getBytes(defaultCharset);
+    @Override
+    protected Message createMessage(Object obj, MessageProperties props) {
+        try {
+            String json = JSON.toJSONString(obj);
+            byte[] body = json.getBytes(defaultCharset);
 
-			props.setContentType(MessageProperties.CONTENT_TYPE_JSON);
-			props.setContentEncoding(defaultCharset);
+            props.setContentType(MessageProperties.CONTENT_TYPE_JSON);
+            props.setContentEncoding(defaultCharset);
 
-			if(body != null)
-				props.setContentLength(body.length);
+            if (body != null)
+                props.setContentLength(body.length);
 
-			return new Message(body, props);
-		}
-		catch(UnsupportedEncodingException e)
-		{
-			throw new MessageConversionException("invalid charset " + defaultCharset, e);
-		}
-	}
+            return new Message(body, props);
+        } catch (UnsupportedEncodingException e) {
+            throw new MessageConversionException("invalid charset " + defaultCharset, e);
+        }
+    }
 
-	@Override
-	public Object fromMessage(Message message)
-	{
-		String charset = message.getMessageProperties().getContentEncoding();
-		
-		if(charset == null)
-			charset = defaultCharset;
+    @Override
+    public Object fromMessage(Message message) {
+        String charset = message.getMessageProperties().getContentEncoding();
 
-		try
-		{
-			return new String(message.getBody(), charset);
-		}
-		catch(UnsupportedEncodingException e)
-		{
-			throw new MessageConversionException("invalid charset " + charset, e);
-		}
-	}
+        if (charset == null)
+            charset = defaultCharset;
 
-	public void setDefaultCharset(String defaultCharset)
-	{
-		this.defaultCharset = (defaultCharset != null ? defaultCharset : "UTF-8");
-	}
+        try {
+            return new String(message.getBody(), charset);
+        } catch (UnsupportedEncodingException e) {
+            throw new MessageConversionException("invalid charset " + charset, e);
+        }
+    }
 
-	public String getDefaultCharset()
-	{
-		return this.defaultCharset;
-	}
+    public String getDefaultCharset() {
+        return this.defaultCharset;
+    }
+
+    public void setDefaultCharset(String defaultCharset) {
+        this.defaultCharset = (defaultCharset != null ? defaultCharset : "UTF-8");
+    }
 
 }

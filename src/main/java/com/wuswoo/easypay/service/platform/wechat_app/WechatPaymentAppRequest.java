@@ -13,9 +13,11 @@ public class WechatPaymentAppRequest extends PaymentRequest {
     public WechatPaymentAppRequest() {
 
     }
+
     public WechatPaymentAppRequest(BaseRequest request) {
         super(request);
     }
+
     @Override
     public String sign() {
         String paternerKey = this.getQueryParam("paterner_key");

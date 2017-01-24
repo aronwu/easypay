@@ -55,13 +55,15 @@ public class WechatAppRefundServiceImpl extends AbstractRefundService {
     }
 
     @Override
-    public EasyPaymentResponse refund(Refund refund, List<RefundResult> refundResults) throws EasyPayException {
+    public EasyPaymentResponse refund(Refund refund, List<RefundResult> refundResults)
+        throws EasyPayException {
         EasyPaymentResponse response = new EasyPaymentResponse();
         List<RefundResult> lstNotifies = new ArrayList<RefundResult>(refundResults.size());
         refund = refundDBService.insertRefund(refund, refundResults);
         int successes = 0;
-        for(RefundResult refundResult : refundResults) {
-            PaymentResult paymentResult = paymentDBService.getPaymentResult(refundResult.getPaymentCode());
+        for (RefundResult refundResult : refundResults) {
+            PaymentResult paymentResult =
+                paymentDBService.getPaymentResult(refundResult.getPaymentCode());
             SecapiPayRefund wechatRefund = new SecapiPayRefund();
             wechatRefund.setAppid(this.refundRequest.getQueryParam("appid"));
             wechatRefund.setMch_id(this.refundRequest.getQueryParam("mch_id"));
@@ -74,7 +76,8 @@ public class WechatAppRefundServiceImpl extends AbstractRefundService {
             logger.info("Wechat Refund: {0}", JSONObject.toJSONString(wechatRefund, true));
             SecapiPayRefundResult wechatResult = null;
             try {
-                wechatResult = PayMchAPI.secapiPayRefund(wechatRefund, this.refundRequest.getQueryParam("paterner_key"));
+                wechatResult = PayMchAPI.secapiPayRefund(wechatRefund,
+                    this.refundRequest.getQueryParam("paterner_key"));
             } catch (Exception e) {
                 logger.error("微信退款请求发送失败", e);
                 refundResult.setRefundError("微信退款请求发送失败");
@@ -87,7 +90,8 @@ public class WechatAppRefundServiceImpl extends AbstractRefundService {
                 //校验签名
 
 
-                if(!WechatAppUtil.validateSecapiPayRefundResultSign(wechatResult, this.refundRequest.getQueryParam("paterner_key"))) {
+                if (!WechatAppUtil.validateSecapiPayRefundResultSign(wechatResult,
+                    this.refundRequest.getQueryParam("paterner_key"))) {
                     logger.error("微信退款请求签名失败 :{0}", wechatResult.getSign());
                     refundResult.setRefundError("微信退款请求签名失败");
                     refundResult.setStatus(PayConstant.RefundStatus.REFUND_FAILED.byteValue());
@@ -95,11 +99,9 @@ public class WechatAppRefundServiceImpl extends AbstractRefundService {
                     continue;
 
                 }
-                refundResult.setStatus(
-                    "SUCCESS".equalsIgnoreCase(wechatResult.getResult_code()) ?
-                        PayConstant.RefundStatus.REFUND_IN_PROCESS.byteValue() :
-                        PayConstant.RefundStatus.REFUND_FAILED.byteValue()
-                );
+                refundResult.setStatus("SUCCESS".equalsIgnoreCase(wechatResult.getResult_code()) ?
+                    PayConstant.RefundStatus.REFUND_IN_PROCESS.byteValue() :
+                    PayConstant.RefundStatus.REFUND_FAILED.byteValue());
                 refundResult.setReturnCode(wechatResult.getReturn_code());
                 refundResult.setRefundTradeNo(wechatResult.getRefund_id());
                 refundResult.setRefundAmount(wechatResult.getRefund_fee());
@@ -109,30 +111,30 @@ public class WechatAppRefundServiceImpl extends AbstractRefundService {
                 }
                 try {
                     refundResult.setReturnContent(XMLUtil.convertToXML(wechatResult));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     refundResult.setReturnContent(JSONObject.toJSONString(wechatResult, true));
                 }
                 logger.info("refund result: {}", JSONObject.toJSONString(refundResult));
                 refundDBService.updateRefundResult(refundResult);
                 if ("SUCCESS".equalsIgnoreCase(wechatResult.getResult_code())) {
-                    successes ++;
-                    resultQueryDBService.createResultQuery(PayConstant.PlatformType.WEIXINWAP.intValue(),
-                        PayConstant.NotifyResultType.REFUND.byteValue(),
-                        refundResult.getId()
-                        );
+                    successes++;
+                    resultQueryDBService
+                        .createResultQuery(PayConstant.PlatformType.WEIXINWAP.intValue(),
+                            PayConstant.NotifyResultType.REFUND.byteValue(), refundResult.getId());
                 }
                 //TODO
                 //交易余额不足，使用微信余额退款
                 lstNotifies.add(refundResult);
             } else {
-                String msg = String.format("发送微信退款请求失败code:%s,msg:%s", wechatResult.getReturn_code()
-                    ,wechatResult.getReturn_msg());
+                String msg = String
+                    .format("发送微信退款请求失败code:%s,msg:%s", wechatResult.getReturn_code(),
+                        wechatResult.getReturn_msg());
                 refundResult.setRefundError(msg);
                 refundResult.setReturnCode(wechatResult.getReturn_code());
                 refundResult.setStatus(PayConstant.RefundStatus.REFUND_FAILED.byteValue());
                 try {
                     refundResult.setReturnContent(XMLUtil.convertToXML(wechatResult));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     refundResult.setReturnContent(JSONObject.toJSONString(wechatResult, true));
                 }
                 logger.info("error refund result: {}", JSONObject.toJSONString(refundResult));
@@ -141,7 +143,7 @@ public class WechatAppRefundServiceImpl extends AbstractRefundService {
 
             }
         }
-        refund.setSuccessNum((short)successes);
+        refund.setSuccessNum((short) successes);
         refundDBService.updateRefund(refund);
         response.setData(refund);
         //提醒业务系统退款请求结果
@@ -156,14 +158,11 @@ public class WechatAppRefundServiceImpl extends AbstractRefundService {
 
     @Override
     public String responseToPaymentPlatform(boolean success) {
-        return success ? "<xml>"
-            + "<return_code><![CDATA[SUCCESS]]></return_code>"
-            + "<return_msg><![CDATA[OK]]></return_msg>"
-            + "</xml>"
-            : "<xml>"
-            + "<return_code><![CDATA[FAIL]]></return_code>"
-            + "<return_msg><![CDATA[更新失败]]></return_msg>"
-            + "</xml>";
+        return success ?
+            "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
+                + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml>" :
+            "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+                + "<return_msg><![CDATA[更新失败]]></return_msg>" + "</xml>";
     }
 
     @Override

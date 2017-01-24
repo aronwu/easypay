@@ -25,14 +25,29 @@ import java.util.Map;
  * {@code constant1/:placeholder1/constant2/:*}.
  * {@code :*} is a special placeholder to catch the rest of the path
  * (may include slashes). If exists, it must appear at the end of the path.
- *
+ * <p/>
  * The path must not contain URL query, example:
  * {@code constant1/constant2?foo=bar}.
- *
+ * <p/>
  * The path will be broken to tokens, example:
  * {@code ["constant1", ":variable", "constant2", ":*"]}
  */
 final class Path {
+    private final String path;
+
+    //--------------------------------------------------------------------------
+    private final String[] tokens;
+    /**
+     * The path must not contain URL query, example:
+     * {@code constant1/constant2?foo=bar}.
+     * <p/>
+     * The path will be stored without slashes at both ends.
+     */
+    public Path(String path) {
+        this.path = removeSlashesAtBothEnds(ObjectUtil.checkNotNull(path, "path"));
+        this.tokens = StringUtil.split(this.path, '/');
+    }
+
     public static String removeSlashesAtBothEnds(String path) {
         ObjectUtil.checkNotNull(path, "path");
         if (path.isEmpty()) {
@@ -55,23 +70,9 @@ final class Path {
         return path.substring(beginIndex, endIndex + 1);
     }
 
-    //--------------------------------------------------------------------------
-
-    private final String   path;
-    private final String[] tokens;
-
     /**
-     * The path must not contain URL query, example:
-     * {@code constant1/constant2?foo=bar}.
-     *
-     * The path will be stored without slashes at both ends.
+     * Returns the path given at the constructor, without slashes at both ends.
      */
-    public Path(String path) {
-        this.path   = removeSlashesAtBothEnds(ObjectUtil.checkNotNull(path, "path"));
-        this.tokens = StringUtil.split(this.path, '/');
-    }
-
-    /** Returns the path given at the constructor, without slashes at both ends. */
     public String path() {
         return path;
     }
@@ -98,6 +99,10 @@ final class Path {
             return false;
         }
 
+        if (!(o instanceof Path)) {
+            return false;
+        }
+
         return ((Path) o).path.equals(path);
     }
 
@@ -105,7 +110,7 @@ final class Path {
 
     /**
      * {@code params} will be updated with params embedded in the path.
-     *
+     * <p/>
      * This method signature is designed so that {@code pathTokens} and {@code params}
      * can be created only once then reused, to optimize for performance when a
      * large number of paths need to be matched.
@@ -115,7 +120,7 @@ final class Path {
     public boolean match(String[] requestPathTokens, Map<String, String> params) {
         if (tokens.length == requestPathTokens.length) {
             for (int i = 0; i < tokens.length; i++) {
-                String key   = tokens[i];
+                String key = tokens[i];
                 String value = requestPathTokens[i];
 
                 if (key.length() > 0 && key.charAt(0) == ':') {
@@ -135,7 +140,7 @@ final class Path {
             tokens.length <= requestPathTokens.length) {
             // The first part
             for (int i = 0; i < tokens.length - 2; i++) {
-                String key   = tokens[i];
+                String key = tokens[i];
                 String value = requestPathTokens[i];
 
                 if (key.length() > 0 && key.charAt(0) == ':') {

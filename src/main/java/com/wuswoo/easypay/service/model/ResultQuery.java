@@ -1,7 +1,7 @@
 package com.wuswoo.easypay.service.model;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "result_query")
 public class ResultQuery {

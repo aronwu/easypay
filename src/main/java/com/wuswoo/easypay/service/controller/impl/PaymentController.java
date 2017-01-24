@@ -2,7 +2,6 @@ package com.wuswoo.easypay.service.controller.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wuswoo.easypay.common.util.ReflectionUtil;
-import com.wuswoo.easypay.common.util.TimeCost;
 import com.wuswoo.easypay.http.server.Request;
 import com.wuswoo.easypay.http.server.Response;
 import com.wuswoo.easypay.service.aspect.Contract;
@@ -19,7 +18,6 @@ import com.wuswoo.easypay.service.payment.contract.EasyPaymentResponse;
 import com.wuswoo.easypay.service.payment.contract.EasyRefundRequest;
 import com.wuswoo.easypay.service.repository.IPaymentDBService;
 import com.wuswoo.easypay.service.repository.IPaymentService;
-import com.wuswoo.easypay.service.repository.IRefundDBService;
 import com.wuswoo.easypay.service.request.PaymentRequest;
 import com.wuswoo.easypay.service.util.PayConstant;
 import com.wuswoo.easypay.service.util.PaymentServiceFactory;
@@ -58,11 +56,12 @@ public class PaymentController implements IPaymentController {
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }
-        if (payment == null){
+        if (payment == null) {
             //输入数据出现问题
             throw new EasyPayException("输入支付信息有误", EasyPayException.INPUT_CONTRACT_ERROR);
         }
-        IEasyPaymentService iEasyPaymentService = PaymentServiceFactory.getPaymentService(payment.getPlatformId());
+        IEasyPaymentService iEasyPaymentService =
+            PaymentServiceFactory.getPaymentService(payment.getPlatformId());
         EasyPaymentResponse easyPaymentResponse = null;
         try {
             PaymentRequest paymentRequest = iEasyPaymentService.newPayment(payment);
@@ -91,16 +90,19 @@ public class PaymentController implements IPaymentController {
         EasyPaymentResponse easyPaymentResponse = new EasyPaymentResponse();
         try {
             EasyRefundRequest easyRefundRequest = (EasyRefundRequest) request.getContract();
-            Map<String, PaymentResult> paymentResults= getPaymentsByRefundRequest(easyRefundRequest);
+            Map<String, PaymentResult> paymentResults =
+                getPaymentsByRefundRequest(easyRefundRequest);
             //初始化refund
             Refund refund = new Refund();
             refund.setUserId(easyRefundRequest.getUserId());
             refund.setAppId(easyRefundRequest.getAppId());
             //初始化退款列表
-            for(RefundResult refundResult : easyRefundRequest.getBatchRefunds()) {
+            for (RefundResult refundResult : easyRefundRequest.getBatchRefunds()) {
                 PaymentResult paymentResult = paymentResults.get(refundResult.getPaymentCode());
-                if (paymentResult == null){
-                    throw new EasyPayException(String.format("没有找到支付单号:%s", refundResult.getPaymentCode()), EasyPayException.UNKNOWN_ERROR);
+                if (paymentResult == null) {
+                    throw new EasyPayException(
+                        String.format("没有找到支付单号:%s", refundResult.getPaymentCode()),
+                        EasyPayException.UNKNOWN_ERROR);
                 }
                 refundResult.setPlatformId(paymentResult.getPlatformId());
                 refundResult.setTradeNo(paymentResult.getTradeNo());
@@ -109,7 +111,8 @@ public class PaymentController implements IPaymentController {
                 refundResult.setReturnCode(null);
             }
             refund.setPlatformId(easyRefundRequest.getBatchRefunds().get(0).getPlatformId());
-            IRefundService refundService = PaymentServiceFactory.getRefundService(refund.getPlatformId());
+            IRefundService refundService =
+                PaymentServiceFactory.getRefundService(refund.getPlatformId());
             easyPaymentResponse = refundService.refund(refund, easyRefundRequest.getBatchRefunds());
 
         } catch (EasyPayException e) {
@@ -126,19 +129,20 @@ public class PaymentController implements IPaymentController {
 
     }
 
-    private Map<String,PaymentResult> getPaymentsByRefundRequest(EasyRefundRequest refundRequest) {
+    private Map<String, PaymentResult> getPaymentsByRefundRequest(EasyRefundRequest refundRequest) {
         List<String> paymentCodes = new ArrayList<String>();
-        for(RefundResult refundResult : refundRequest.getBatchRefunds()) {
+        for (RefundResult refundResult : refundRequest.getBatchRefunds()) {
             paymentCodes.add(refundResult.getPaymentCode());
         }
-        List<PaymentResult> paymentResults = paymentDBService.getPaymentResultsByPaymentCodes(paymentCodes,
-            PayConstant.PaymentStatus.SUCCESS.byteValue());
+        List<PaymentResult> paymentResults = paymentDBService
+            .getPaymentResultsByPaymentCodes(paymentCodes,
+                PayConstant.PaymentStatus.SUCCESS.byteValue());
         if (paymentResults.size() != refundRequest.getBatchRefunds().size()) {
             throw new EasyPayException("批量退款单数和实际支付单数不一致", EasyPayException.UNKNOWN_ERROR);
         }
         //检查是否批量退款是否同一支付平台
         Integer platformId = null;
-        for(PaymentResult paymentResult : paymentResults) {
+        for (PaymentResult paymentResult : paymentResults) {
             if (platformId == null) {
                 platformId = paymentResult.getPlatformId();
             } else if (platformId != paymentResult.getPlatformId()) {
@@ -146,7 +150,7 @@ public class PaymentController implements IPaymentController {
             }
         }
         Map<String, PaymentResult> results = new HashMap<String, PaymentResult>();
-        for(PaymentResult paymentResult : paymentResults) {
+        for (PaymentResult paymentResult : paymentResults) {
             results.put(paymentResult.getPaymentCode(), paymentResult);
         }
         return results;

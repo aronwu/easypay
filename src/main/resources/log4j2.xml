@@ -40,7 +40,8 @@ service-error.log:只记录error级别日志
                 <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
         </RollingRandomAccessFile>
-        <RollingRandomAccessFile name="SERVICE_ERR_LOG_FILE" fileName="${log_path}/service-error.log"
+        <RollingRandomAccessFile name="SERVICE_ERR_LOG_FILE"
+                                 fileName="${log_path}/service-error.log"
                                  filePattern="${log_path}/%d{yyyy-MM}/service-error-%d{yyyy-MM-dd}-%i.log.gz">
             <!-- <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY" /> -->
             <PatternLayout charset="UTF-8" pattern="${log_pattern}"/>

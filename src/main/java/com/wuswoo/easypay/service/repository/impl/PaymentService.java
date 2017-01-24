@@ -43,13 +43,14 @@ public class PaymentService implements IPaymentService {
     /**
      * 处理支付结果
      * 只处理支付成功,同时异步通知第三方业务系统
+     *
      * @param paymentResult
      * @param ignoreNotify
      * @return
      */
     @Override
     public boolean savePaymentResult(PaymentResult paymentResult, boolean ignoreNotify) {
-        if (paymentResult  == null) {
+        if (paymentResult == null) {
             throw new EasyPayException("保存支付结果失败", EasyPayException.UNKNOWN_ERROR);
         }
         boolean result = false;
@@ -58,14 +59,17 @@ public class PaymentService implements IPaymentService {
             return true;
         }
 
-        PaymentResult existedPaymentResult = paymentDBService.getPaymentResult(paymentResult.getPaymentCode());
+        PaymentResult existedPaymentResult =
+            paymentDBService.getPaymentResult(paymentResult.getPaymentCode());
         if (existedPaymentResult != null && existedPaymentResult.getStatus() != null) {
             //已经成功支付,不更新记录,会通知业务系统
-            if ( PayConstant.PaymentStatus.SUCCESS.byteValue() != existedPaymentResult.getStatus().byteValue()) {
+            if (PayConstant.PaymentStatus.SUCCESS.byteValue() != existedPaymentResult.getStatus()
+                .byteValue()) {
                 //没有支付成功用最新
                 paymentDBService.savePaymentResult(paymentResult);
             }
-            if (PayConstant.PaymentStatus.SUCCESS.byteValue() == paymentResult.getStatus().byteValue() && !ignoreNotify) {
+            if (PayConstant.PaymentStatus.SUCCESS.byteValue() == paymentResult.getStatus()
+                .byteValue() && !ignoreNotify) {
                 NotifySchedule notifySchedule = new NotifySchedule();
                 notifySchedule.setPaymentCode(paymentResult.getPaymentCode());
                 notifySchedule.setTradeId(existedPaymentResult.getId());
@@ -78,7 +82,8 @@ public class PaymentService implements IPaymentService {
         } else {
 
             int saveResult = paymentDBService.savePaymentResult(paymentResult);
-            if (saveResult == 1 && PayConstant.PaymentStatus.SUCCESS.byteValue() == paymentResult.getStatus().byteValue() && !ignoreNotify) {
+            if (saveResult == 1 && PayConstant.PaymentStatus.SUCCESS.byteValue() == paymentResult
+                .getStatus().byteValue() && !ignoreNotify) {
                 logger.info("first recevie payment success notify result {}", paymentResult);
                 NotifySchedule notifySchedule = new NotifySchedule();
                 notifySchedule.setPaymentCode(paymentResult.getPaymentCode());
@@ -120,7 +125,7 @@ public class PaymentService implements IPaymentService {
         Date current = new Date();
         notifySchedule.setCreatedTime(current);
         notifySchedule.setUpdatedTime(current);
-        notifySchedule.setNotifyCount((byte)1);
+        notifySchedule.setNotifyCount((byte) 1);
         return notifyScheduleMapper.insertSelective(notifySchedule) > 0 ? true : false;
 
     }
@@ -149,7 +154,7 @@ public class PaymentService implements IPaymentService {
         Date current = new Date();
         notifySchedule.setCreatedTime(current);
         notifySchedule.setUpdatedTime(current);
-        notifySchedule.setNotifyCount((byte)1);
+        notifySchedule.setNotifyCount((byte) 1);
         return notifyScheduleMapper.insert(notifySchedule) > 0;
     }
 

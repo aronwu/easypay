@@ -12,6 +12,14 @@ public class HttpExceptionResponse {
     private String message;
     private List<String> errors = new ArrayList<String>();
 
+    public HttpExceptionResponse() {
+    }
+
+    public HttpExceptionResponse(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public String getCode() {
         return code;
     }
@@ -40,13 +48,6 @@ public class HttpExceptionResponse {
         if (errors == null)
             errors = new ArrayList<String>();
         errors.add(error);
-    }
-
-    public HttpExceptionResponse() {}
-
-    public HttpExceptionResponse(String code, String message) {
-        this.code = code;
-        this.message = message;
     }
 
 

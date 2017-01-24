@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by wuxinjun on 16/11/3.
  */
-public class EasyPaymentResponse implements Serializable{
+public class EasyPaymentResponse implements Serializable {
 
     private static final long serialVersionUID = 46335569005225785L;
 

@@ -5,6 +5,7 @@ version '1.0.0'
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'maven'
+apply from: './quality/quality.gradle'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -68,3 +69,4 @@ sourceSets {
         }
     }
 }
+

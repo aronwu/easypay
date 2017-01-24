@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
  * Created by wuxinjun on 16/9/7.
  */
 public class ShutdownThread extends Thread {
-    private IServer server;
     private static Logger logger = LogManager.getLogger(ShutdownThread.class);
+    private IServer server;
 
     public ShutdownThread(IServer server) {
         this.server = server;

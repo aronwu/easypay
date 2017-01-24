@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wuswoo.easypay.service.mapper.ResultQueryMapper">
-  <resultMap id="BaseResultMap" type="com.wuswoo.easypay.service.model.ResultQuery">
-    <!--
-      WARNING - @mbggenerated
-    -->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="trade_id" jdbcType="BIGINT" property="tradeId" />
-    <result column="trade_type" jdbcType="TINYINT" property="tradeType" />
-    <result column="platform_id" jdbcType="INTEGER" property="platformId" />
-    <result column="next_query_time" jdbcType="INTEGER" property="nextQueryTime" />
-    <result column="query_count" jdbcType="TINYINT" property="queryCount" />
-    <result column="query_status" jdbcType="TINYINT" property="queryStatus" />
-    <result column="return_content" jdbcType="VARCHAR" property="returnContent" />
-    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
-    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.wuswoo.easypay.service.model.ResultQuery">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="trade_id" jdbcType="BIGINT" property="tradeId"/>
+        <result column="trade_type" jdbcType="TINYINT" property="tradeType"/>
+        <result column="platform_id" jdbcType="INTEGER" property="platformId"/>
+        <result column="next_query_time" jdbcType="INTEGER" property="nextQueryTime"/>
+        <result column="query_count" jdbcType="TINYINT" property="queryCount"/>
+        <result column="query_status" jdbcType="TINYINT" property="queryStatus"/>
+        <result column="return_content" jdbcType="VARCHAR" property="returnContent"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+    </resultMap>
 </mapper>

@@ -19,7 +19,7 @@ public abstract class RefundRequest extends BaseRequest {
     public String getSignQueryString() {
         sign();
         QueryStringEncoder encoder = new QueryStringEncoder("?");
-        for(Map.Entry<String, String> entry:getQueryParams().entrySet()) {
+        for (Map.Entry<String, String> entry : getQueryParams().entrySet()) {
             encoder.addParam(entry.getKey(), entry.getValue());
         }
         String qsd = encoder.toString();

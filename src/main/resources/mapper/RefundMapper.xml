@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wuswoo.easypay.service.mapper.RefundMapper">
-  <resultMap id="BaseResultMap" type="com.wuswoo.easypay.service.model.Refund">
-    <!--
-      WARNING - @mbggenerated
-    -->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="app_id" jdbcType="INTEGER" property="appId" />
-    <result column="platform_id" jdbcType="INTEGER" property="platformId" />
-    <result column="refund_batch_code" jdbcType="VARCHAR" property="refundBatchCode" />
-    <result column="success_num" jdbcType="SMALLINT" property="successNum" />
-    <result column="batch_num" jdbcType="SMALLINT" property="batchNum" />
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
-    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.wuswoo.easypay.service.model.Refund">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="app_id" jdbcType="INTEGER" property="appId"/>
+        <result column="platform_id" jdbcType="INTEGER" property="platformId"/>
+        <result column="refund_batch_code" jdbcType="VARCHAR" property="refundBatchCode"/>
+        <result column="success_num" jdbcType="SMALLINT" property="successNum"/>
+        <result column="batch_num" jdbcType="SMALLINT" property="batchNum"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+    </resultMap>
 </mapper>

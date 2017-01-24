@@ -33,22 +33,20 @@ public class HttpRouterServer {
         // But you can make them classes, and at HttpRouterServerHandler once you
         // get a target class, you can create an instance of it and dispatch the
         // request to the instance etc.
-        Router<String> router = new Router<String>()
-            .GET("/",             "Index page")
-            .GET("/articles/:id", "Article show page")
-            .notFound("404 Not Found");
+        Router<String> router =
+            new Router<String>().GET("/", "Index page").GET("/articles/:id", "Article show page")
+                .notFound("404 Not Found");
         System.out.println(router);
 
-        NioEventLoopGroup bossGroup   = new NioEventLoopGroup(1);
+        NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try {
             ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-             .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
-             .childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE)
-             .channel(NioServerSocketChannel.class)
-             .childHandler(new HttpRouterServerInitializer(router));
+            b.group(bossGroup, workerGroup).childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
+                .childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new HttpRouterServerInitializer(router));
 
             Channel ch = b.bind(PORT).sync().channel();
             System.out.println("IServer started: http://127.0.0.1:" + PORT + '/');

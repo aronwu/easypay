@@ -26,26 +26,33 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
  * This utility handler should be put at the last position of the inbound pipeline to
  * catch all exceptions caused by bad client (closed connection, malformed request etc.)
  * and server processing, then close the connection.
- *
+ * <p/>
  * By default exceptions are logged to Netty internal logger. You may need to override
  * {@link #onUnknownMessage(Object)}, {@link #onBadClient(Throwable)}, and
  * {@link #onBadServer(Throwable)} to log to more suitable places.
  */
 @Sharable
 public class BadClientSilencer extends SimpleChannelInboundHandler<Object> {
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(BadClientSilencer.class);
+    private static final InternalLogger log =
+        InternalLoggerFactory.getInstance(BadClientSilencer.class);
 
-    /** Logs to Netty internal logger. Override this method to log to other places if you want. */
+    /**
+     * Logs to Netty internal logger. Override this method to log to other places if you want.
+     */
     protected void onUnknownMessage(Object msg) {
         log.warn("Unknown msg: " + msg);
     }
 
-    /** Logs to Netty internal logger. Override this method to log to other places if you want. */
+    /**
+     * Logs to Netty internal logger. Override this method to log to other places if you want.
+     */
     protected void onBadClient(Throwable e) {
         log.warn("Caught exception (maybe client is bad)", e);
     }
 
-    /** Logs to Netty internal logger. Override this method to log to other places if you want. */
+    /**
+     * Logs to Netty internal logger. Override this method to log to other places if you want.
+     */
     protected void onBadServer(Throwable e) {
         log.warn("Caught exception (maybe server is bad)", e);
     }
@@ -68,12 +75,12 @@ public class BadClientSilencer extends SimpleChannelInboundHandler<Object> {
         ctx.close();
 
         // To clarify where exceptions are from, imports are not used
-        if (e instanceof java.io.IOException                            ||  // Connection reset by peer, Broken pipe
-            e instanceof java.nio.channels.ClosedChannelException       ||
-            e instanceof io.netty.handler.codec.DecoderException        ||
+        if (e instanceof java.io.IOException ||  // Connection reset by peer, Broken pipe
+            e instanceof java.nio.channels.ClosedChannelException ||
+            e instanceof io.netty.handler.codec.DecoderException ||
             e instanceof io.netty.handler.codec.CorruptedFrameException ||  // Bad WebSocket frame
-            e instanceof IllegalArgumentException             ||  // Use https://... to connect to HTTP server
-            e instanceof javax.net.ssl.SSLException                     ||  // Use http://... to connect to HTTPS server
+            e instanceof IllegalArgumentException ||  // Use https://... to connect to HTTP server
+            e instanceof javax.net.ssl.SSLException ||  // Use http://... to connect to HTTPS server
             e instanceof io.netty.handler.ssl.NotSslRecordException) {
             onBadClient(e);  // Maybe client is bad
         } else {

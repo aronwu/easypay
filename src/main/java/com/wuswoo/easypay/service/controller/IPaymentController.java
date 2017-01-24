@@ -12,6 +12,7 @@ import com.wuswoo.easypay.http.server.Response;
 public interface IPaymentController extends IController {
     /**
      * 下单接口
+     *
      * @param request
      * @return
      */
@@ -19,6 +20,7 @@ public interface IPaymentController extends IController {
 
     /**
      * 查询订单状态接口
+     *
      * @param request
      * @return
      */
@@ -26,6 +28,7 @@ public interface IPaymentController extends IController {
 
     /**
      * 退款接口
+     *
      * @param request
      * @return
      */
@@ -33,6 +36,7 @@ public interface IPaymentController extends IController {
 
     /**
      * 查询退款接口
+     *
      * @param request
      * @return
      */

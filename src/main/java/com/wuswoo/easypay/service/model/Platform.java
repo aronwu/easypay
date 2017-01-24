@@ -1,7 +1,10 @@
 package com.wuswoo.easypay.service.model;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Platform {
     @Id
@@ -22,7 +25,7 @@ public class Platform {
 
     /**
      * 异步等待秒数
-当第三方提供异步返回时，需要设置异步等待秒数
+     * 当第三方提供异步返回时，需要设置异步等待秒数
      */
     @Column(name = "ansync_wait_sec")
     private Integer ansyncWaitSec;
@@ -107,10 +110,10 @@ public class Platform {
 
     /**
      * 获取异步等待秒数
-当第三方提供异步返回时，需要设置异步等待秒数
+     * 当第三方提供异步返回时，需要设置异步等待秒数
      *
      * @return ansync_wait_sec - 异步等待秒数
-当第三方提供异步返回时，需要设置异步等待秒数
+     * 当第三方提供异步返回时，需要设置异步等待秒数
      */
     public Integer getAnsyncWaitSec() {
         return ansyncWaitSec;
@@ -118,10 +121,10 @@ public class Platform {
 
     /**
      * 设置异步等待秒数
-当第三方提供异步返回时，需要设置异步等待秒数
+     * 当第三方提供异步返回时，需要设置异步等待秒数
      *
      * @param ansyncWaitSec 异步等待秒数
-当第三方提供异步返回时，需要设置异步等待秒数
+     *                      当第三方提供异步返回时，需要设置异步等待秒数
      */
     public void setAnsyncWaitSec(Integer ansyncWaitSec) {
         this.ansyncWaitSec = ansyncWaitSec;

@@ -1,7 +1,10 @@
 package com.wuswoo.easypay.service.model;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Payment {
     @Id
@@ -34,7 +37,6 @@ public class Payment {
 
     /**
      * 在线支付金额
-
      */
     private Integer amount;
 
@@ -200,10 +202,8 @@ public class Payment {
 
     /**
      * 获取在线支付金额
-
      *
      * @return amount - 在线支付金额
-
      */
     public Integer getAmount() {
         return amount;
@@ -211,10 +211,8 @@ public class Payment {
 
     /**
      * 设置在线支付金额
-
      *
      * @param amount 在线支付金额
-
      */
     public void setAmount(Integer amount) {
         this.amount = amount;

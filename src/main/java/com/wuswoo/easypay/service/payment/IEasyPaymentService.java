@@ -13,6 +13,7 @@ public interface IEasyPaymentService {
 
     /**
      * 发起支付接口
+     *
      * @param payment
      * @return
      * @throws EasyPayException
@@ -21,26 +22,29 @@ public interface IEasyPaymentService {
 
     /**
      * 获取异步支付同步通知结果
+     *
      * @param request
      * @param platformId
      * @return
      * @throws EasyPayException
      */
-    public PaymentResult getNotifyPaymentResult(Request request, Integer platformId) throws
-        EasyPayException;
+    public PaymentResult getNotifyPaymentResult(Request request, Integer platformId)
+        throws EasyPayException;
 
     /**
      * 获取同步支付同步通知结果
+     *
      * @param request
      * @param platformId
      * @return
      * @throws EasyPayException
      */
-    public PaymentResult getPaymentResult(Request request, Integer platformId) throws
-        EasyPayException;
+    public PaymentResult getPaymentResult(Request request, Integer platformId)
+        throws EasyPayException;
 
     /**
      * 根据处理结果回复支付网关
+     *
      * @param paymentResult
      * @param resultStatus
      * @return

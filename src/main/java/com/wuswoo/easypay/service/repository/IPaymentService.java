@@ -13,6 +13,7 @@ public interface IPaymentService {
 
     /**
      * 保存支付结果
+     *
      * @param paymentResult
      * @param ignoreNotify
      * @return
@@ -21,6 +22,7 @@ public interface IPaymentService {
 
     /**
      * 保存退款结果
+     *
      * @param refund
      * @param refundResults
      * @return
@@ -29,6 +31,7 @@ public interface IPaymentService {
 
     /**
      * 保存业务回调结果
+     *
      * @param notifySchedule
      * @return
      */
@@ -36,14 +39,17 @@ public interface IPaymentService {
 
     /**
      * 获取支付凭证
+     *
      * @param payment
      * @param paymentRequest
      * @return
      */
-    public EasyPaymentResponse generatePaymentRequest(Payment payment, PaymentRequest paymentRequest);
+    public EasyPaymentResponse generatePaymentRequest(Payment payment,
+        PaymentRequest paymentRequest);
 
     /**
      * 保存业务系统通知记录
+     *
      * @param notifySchedule
      * @return
      */
@@ -51,6 +57,7 @@ public interface IPaymentService {
 
     /**
      * 更新业务系统通知记录
+     *
      * @param notifySchedule
      * @return
      */

@@ -20,18 +20,20 @@ import io.netty.util.internal.StringUtil;
 /**
  * Router that contains information about route matching orders, but doesn't
  * contain information about HTTP request methods.
- *
+ * <p/>
  * Routes are devided into 3 sections: "first", "last", and "other".
  * Routes in "first" are matched first, then in "other", then in "last".
  */
 final public class MethodlessRouter<T> {
     private final OrderlessRouter<T> first = new OrderlessRouter<T>();
     private final OrderlessRouter<T> other = new OrderlessRouter<T>();
-    private final OrderlessRouter<T> last  = new OrderlessRouter<T>();
+    private final OrderlessRouter<T> last = new OrderlessRouter<T>();
 
     //--------------------------------------------------------------------------
 
-    /** Returns the "first" router; routes in this router will be matched first. */
+    /**
+     * Returns the "first" router; routes in this router will be matched first.
+     */
     public OrderlessRouter<T> first() {
         return first;
     }
@@ -44,12 +46,16 @@ final public class MethodlessRouter<T> {
         return other;
     }
 
-    /** Returns the "last" router; routes in this router will be matched last. */
+    /**
+     * Returns the "last" router; routes in this router will be matched last.
+     */
     public OrderlessRouter<T> last() {
         return last;
     }
 
-    /** Returns the number of routes in this router. */
+    /**
+     * Returns the number of routes in this router.
+     */
     public int size() {
         return first.routes().size() + other.routes().size() + last.routes().size();
     }
@@ -58,7 +64,7 @@ final public class MethodlessRouter<T> {
 
     /**
      * Adds route to the "first" section.
-     *
+     * <p/>
      * A path can only point to one target. This method does nothing if the path
      * has already been added.
      */
@@ -69,7 +75,7 @@ final public class MethodlessRouter<T> {
 
     /**
      * Adds route to the "other" section.
-     *
+     * <p/>
      * A path can only point to one target. This method does nothing if the path
      * has already been added.
      */
@@ -80,7 +86,7 @@ final public class MethodlessRouter<T> {
 
     /**
      * Adds route to the "last" section.
-     *
+     * <p/>
      * A path can only point to one target. This method does nothing if the path
      * has already been added.
      */
@@ -91,28 +97,36 @@ final public class MethodlessRouter<T> {
 
     //--------------------------------------------------------------------------
 
-    /** Removes the route specified by the path. */
+    /**
+     * Removes the route specified by the path.
+     */
     public void removePath(String path) {
         first.removePath(path);
         other.removePath(path);
-        last .removePath(path);
+        last.removePath(path);
     }
 
-    /** Removes all routes leading to the target. */
+    /**
+     * Removes all routes leading to the target.
+     */
     public void removeTarget(T target) {
         first.removeTarget(target);
         other.removeTarget(target);
-        last .removeTarget(target);
+        last.removeTarget(target);
     }
 
     //--------------------------------------------------------------------------
 
-    /** @return {@code null} if no match; note: {@code queryParams} is not set in {@link RouteResult} */
+    /**
+     * @return {@code null} if no match; note: {@code queryParams} is not set in {@link RouteResult}
+     */
     public RouteResult<T> route(String path) {
         return route(StringUtil.split(Path.removeSlashesAtBothEnds(path), '/'));
     }
 
-    /** @return {@code null} if no match; note: {@code queryParams} is not set in {@link RouteResult} */
+    /**
+     * @return {@code null} if no match; note: {@code queryParams} is not set in {@link RouteResult}
+     */
     public RouteResult<T> route(String[] requestPathTokens) {
         RouteResult<T> ret = first.route(requestPathTokens);
         if (ret != null) {
@@ -132,17 +146,19 @@ final public class MethodlessRouter<T> {
         return null;
     }
 
-    /** Checks if there's any matching route. */
+    /**
+     * Checks if there's any matching route.
+     */
     public boolean anyMatched(String[] requestPathTokens) {
         return first.anyMatched(requestPathTokens) ||
-               other.anyMatched(requestPathTokens) ||
-               last.anyMatched(requestPathTokens);
+            other.anyMatched(requestPathTokens) ||
+            last.anyMatched(requestPathTokens);
     }
 
     /**
      * Given a target and params, this method tries to do the reverse routing
      * and returns the path.
-     *
+     * <p/>
      * The params are put to placeholders in the path.
      * The params can be a map of {@code placeholder name -> value}
      * or ordered values. If a param doesn't have a placeholder, it will be put

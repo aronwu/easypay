@@ -15,11 +15,14 @@ import java.util.List;
  */
 public interface IRefundService {
 
-    public EasyPaymentResponse refund(Refund refund, List<RefundResult> refundResults) throws EasyPayException;
+    public EasyPaymentResponse refund(Refund refund, List<RefundResult> refundResults)
+        throws EasyPayException;
 
-    public RefundAndResults getRefundAndResults(Request request, Integer platformId) throws EasyPayException;
+    public RefundAndResults getRefundAndResults(Request request, Integer platformId)
+        throws EasyPayException;
 
     public String responseToPaymentPlatform(boolean success);
 
-    public RefundRequest makeRefundRequest(Refund refund, List<RefundResult> refundResults) throws EasyPayException;
+    public RefundRequest makeRefundRequest(Refund refund, List<RefundResult> refundResults)
+        throws EasyPayException;
 }

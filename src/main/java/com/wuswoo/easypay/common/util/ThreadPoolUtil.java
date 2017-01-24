@@ -8,8 +8,11 @@ import java.util.concurrent.TimeUnit;
  * Created by wuxinjun on 16/8/30.
  */
 public class ThreadPoolUtil {
-    public final static ThreadPoolExecutor executor = new ThreadPoolExecutor(3, 5, 10, TimeUnit.MINUTES,
-        new LinkedBlockingDeque<Runnable>(100000));
+    public final static ThreadPoolExecutor executor =
+        new ThreadPoolExecutor(3, 5, 10, TimeUnit.MINUTES,
+            new LinkedBlockingDeque<Runnable>(100000));
 
-    public static ThreadPoolExecutor getExecutor() { return executor;}
+    public static ThreadPoolExecutor getExecutor() {
+        return executor;
+    }
 }

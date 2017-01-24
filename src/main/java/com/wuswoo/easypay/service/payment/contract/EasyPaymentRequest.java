@@ -12,31 +12,31 @@ public class EasyPaymentRequest {
     /**
      * 支付平台
      */
-    @NotNull(message="支付平台不能为空")
-    @Min(value=1)
-    @Max(value=4)
+    @NotNull(message = "支付平台不能为空")
+    @Min(value = 1)
+    @Max(value = 4)
     private Integer platformId;
 
     /**
      * 支付单号,用订单编号
      */
-    @NotNull(message="支付订单编号不能为空")
-    @Size(min=1, max=64, message="订单编号长度为不能超过64个字符")
+    @NotNull(message = "支付订单编号不能为空")
+    @Size(min = 1, max = 64, message = "订单编号长度为不能超过64个字符")
     private String paymentCode;
 
     /**
      * 支付金额
      * 单位为分
      */
-    @NotNull(message="支付金额不能为空")
-    @Min(value=1,message="amount必须大于0")
+    @NotNull(message = "支付金额不能为空")
+    @Min(value = 1, message = "amount必须大于0")
     private Integer amount;
 
     /**
      * 商品名称
      */
-    @NotNull(message="商品名称不能为空")
-    @Size(min=1, max=255, message="商品名称长度不能超过255个字符")
+    @NotNull(message = "商品名称不能为空")
+    @Size(min = 1, max = 255, message = "商品名称长度不能超过255个字符")
     private String itemName;
 
     /**
@@ -44,23 +44,21 @@ public class EasyPaymentRequest {
      */
     private Integer itemCount;
 
-    @NotNull(message="商品描述不能为空")
-    @Size(min=1, max=500, message="商品名称长度不能超过500个字符")
+    @NotNull(message = "商品描述不能为空")
+    @Size(min = 1, max = 500, message = "商品名称长度不能超过500个字符")
     private String itemDesc;
 
     /**
      * 下订用户ID 无传0
-     *
      */
-    @NotNull(message="userId不能为空")
+    @NotNull(message = "userId不能为空")
     private Long userId;
 
     /**
      * 下订订单编号 无传0
-     *
      */
-    @NotNull(message="orderId不能为空")
-    private  Long orderId;
+    @NotNull(message = "orderId不能为空")
+    private Long orderId;
 
     /**
      * 客户端IP地址

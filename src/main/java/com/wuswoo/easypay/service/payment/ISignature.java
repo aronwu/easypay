@@ -7,6 +7,8 @@ import java.util.Map;
  */
 public interface ISignature {
     public String getKey();
+
     public void setKey(String key);
+
     public String sign(Map<String, String> map, String key);
 }

@@ -23,8 +23,10 @@ public interface PaymentExtMapper extends PaymentResultMapper {
         + " AND refund_result.refund_code = #{refundCode} LIMIT 1")
     Refund getRefundByRefundCode(@Param("refundCode") String refundCode);
 
-    @Select("SELECT * FROM notify_schedule WHERE notify_status = 1 AND notify_count < #{maxNotifyCount} "
-        + " ORDER BY id ASC LIMIT #{limit} " )
-    List<NotifySchedule> getFailedNotifySchedules(@Param("maxNotifyCount") Byte maxNotifyCount, @Param("limit") Integer limit);
+    @Select(
+        "SELECT * FROM notify_schedule WHERE notify_status = 1 AND notify_count < #{maxNotifyCount} "
+            + " ORDER BY id ASC LIMIT #{limit} ")
+    List<NotifySchedule> getFailedNotifySchedules(@Param("maxNotifyCount") Byte maxNotifyCount,
+        @Param("limit") Integer limit);
 
 }

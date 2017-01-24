@@ -14,9 +14,7 @@ public class Feature {
      * HTTP response object to string时json seraial的特征
      */
     public static final SerializerFeature[] RESPONSE_JSON_SERIAL_FEATURE =
-        {
-            SerializerFeature.WriteNonStringKeyAsString
-        };
+        {SerializerFeature.WriteNonStringKeyAsString};
     /**
      * HTTP 默认字符集
      */

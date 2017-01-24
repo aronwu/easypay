@@ -4,11 +4,7 @@ import com.wuswoo.easypay.http.server.Request;
 import com.wuswoo.easypay.service.exception.EasyPayException;
 import com.wuswoo.easypay.service.model.Refund;
 import com.wuswoo.easypay.service.model.RefundAndResults;
-import com.wuswoo.easypay.service.model.RefundResult;
-import com.wuswoo.easypay.service.request.BaseRequest;
 import com.wuswoo.easypay.service.request.RefundRequest;
-
-import java.util.List;
 
 /**
  * Created by wuxinjun on 16/10/13.
@@ -35,12 +31,14 @@ public abstract class AbstractRefundService implements IRefundService {
     public RefundAndResults getRefundAndResults(Request request, Integer platformId)
         throws EasyPayException {
         if (getVerifySignature() != null && !getVerifySignature().verify(request)) {
-            throw new EasyPayException("refund result signature verify is failed for platformId:" + platformId);
+            throw new EasyPayException(
+                "refund result signature verify is failed for platformId:" + platformId);
         }
         return parseRefundAndResultsFromRequest(request, platformId);
     }
 
-    protected abstract RefundAndResults parseRefundAndResultsFromRequest(Request request, Integer platformId);
+    protected abstract RefundAndResults parseRefundAndResultsFromRequest(Request request,
+        Integer platformId);
 
     protected abstract Refund parseRefundFromContent(String content) throws EasyPayException;
 

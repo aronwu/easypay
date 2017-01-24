@@ -13,6 +13,7 @@ public interface IStatusController extends IController {
 
     /**
      * 测试接口
+     *
      * @param request
      * @return
      */
